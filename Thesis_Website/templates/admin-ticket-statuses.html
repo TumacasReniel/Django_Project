@@ -1,0 +1,210 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Admin Ticket Statuses</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="{% static 'images/favicon.png' %}'" rel="icon">
+    <link href="{% static 'images/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/style3.css' %}" rel="stylesheet">
+    <link href="{% static 'css/table.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+    {% include 'admin-header.html' %}
+
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar text-success">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item ">
+                <a class="nav-link collapsed" href="{% url 'admin_dashboard' %}">
+                    <i class="bi bi-grid text-success"></i>
+                    <span class="text-success">Dashboard</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'admin_tickets' %}">
+                    <i class="bi bi-file-earmark-text text-success"></i>
+                    <span class="text-success">Tickets</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link " href="{% url 'admin_ticket_statuses' %}">
+                    <i class="bi bi-card-text text-success"></i>
+                    <span class="text-success">Ticket Statuses</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'admin_categories' %}">
+                    <i class="bi bi-sort-up text-success"></i>
+                    <span class="text-success">Ticket Other Details</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'admin_users' %}">
+                    <i class="bi bi-people text-success"></i>
+                    <span class="text-success">Users</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'admin_priorities' %}">
+                    <i class="bi bi-flag text-success"></i>
+                    <span class="text-success">Priorities</span>
+                </a>
+            </li>
+        </ul>
+
+    </aside>
+    <!-- End Sidebar-->
+
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1 class="text-success">Ticket Statuses</h1>
+        </div>
+        <!-- End Page Title -->
+
+        <div class="col-xxl-4 col-12">
+            <div class="card info-card sales-card overflow-auto">
+                <div>
+                    {% if request.user.is_superuser %}
+                    <button data-bs-toggle="modal" data-bs-target="#add-ticket-status" class="btn btn-success m-3 rounded-pill add-dep-btn float-end">
+                        <i class=" bi bi-plus "></i>
+                        Add Ticket Status          
+                    </button> {% endif %}
+                </div>
+                <table class=" content-table overflow-auto ">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Ticket Status </th>
+                            {% if request.user.is_superuser %}
+                            <th class=" text-center ">Action</th>
+                            {% endif %}
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ts in ts %}
+                        <tr class="border border-radius-rounded ">
+                            <td></td>
+                            <td>
+                                <span class="dot " style="background-color:{{ts.ticket_status_color}};"></span> {{ts.ticket_status_name}}
+                            </td>
+                            {% if request.user.is_superuser %}
+                            <td class="text-center ">
+                                <div class=" dropdown ">
+                                    <button class="btn btn-white fw-bold " id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">&mldr;</button>
+                                    <div class="dropdown-menu ">
+                                        <a class="dropdown-item " type="button" data-bs-toggle="modal" data-bs-target="#update-ticket-status{{ts.id}}"><i class="bi bi-pencil-square text-success "></i>Edit</a>
+                                        <a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#delete-ticket-status{{ts.id}}"><i class="bi bi-trash text-danger "></i>Delete</a>
+                                    </div>
+                                </div>
+                            </td>
+                            {% endif %}
+
+                        </tr>
+                        {% include 'admin-manage-ticket-statuses.html' %} {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    </main>
+    <!-- End #main -->
+
+    <!-- Add Ticket Status Modal-->
+    <div class="container container-fluid ">
+        <div class="modal fade " id="add-ticket-status" tabindex="-1" aria-labelledby="add-ticket-statusLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content ">
+                    <div class="modal-header ">
+                        <h5 class="modal-title fw-bold " id="ticket-statusLabel ">Add Ticket Status</h5>
+                        <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <form action="add_ticket_status" method="POST">
+                        {% csrf_token %}
+                        <div class="modal-body ">
+                            <!-- Inputs -->
+                            <div class="mb-3 ">
+                                <label for="ticket_status_name" class="form-label">Ticket Status Name</label>
+                                <input type="text" name="ticket_status_name" class="form-control " required>
+                            </div>
+                            <div class="mb-3 ">
+                                <label for="ticket_status_color" class="form-label">Ticket Status Color</label><br>
+
+                                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                    <input type="radio" class="btn-check" name="ticket_status_color" id="btnradio1" autocomplete="off" value="black" checked>
+                                    <label class="btn btn-dark p-3 m-1 rounded-circle" for="btnradio1"></label>
+
+                                    <input type="radio" class="btn-check" name="ticket_status_color" id="btnradio2" autocomplete="off" value="red">
+                                    <label class="btn btn-red p-3 m-1 rounded-circle" for="btnradio2"></label>
+
+                                    <input type="radio" class="btn-check" name="ticket_status_color" id="btnradio3" autocomplete="off" value="blue">
+                                    <label class="btn btn-blue p-3 m-1 rounded-circle" for="btnradio3"></label>
+
+                                    <input type="radio" class="btn-check" name="ticket_status_color" id="btnradio4" autocomplete="off" value="green">
+                                    <label class="btn btn-green p-3 m-1 rounded-circle" for="btnradio4"></label>
+
+                                    <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off" value="yellow">
+                                    <label class="btn btn-yellow p-3 m-1 rounded-circle" for="btnradio5"> </label>
+
+                                    <input type="radio" class="btn-check" name="ticket_status_color" id="btnradio6" autocomplete="off" value="orange">
+                                    <label class="btn btn-orange p-3 m-1 rounded-circle" for="btnradio6"> </label>
+
+                                    <input type="radio" class="btn-check" name="ticket_status_color" id="btnradio7" autocomplete="off" value="purple">
+                                    <label class="btn btn-purple p-3 m-1 rounded-circle" for="btnradio7"> </label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div align="center ">
+                            <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success" name="add-department-btn ">Add Ticket Status</button>
+                        </div>
+                        <br>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    {% include 'logout.html' %} {% include 'admin-footer.html' %}
+
+
+
+</body>
+
+</html>

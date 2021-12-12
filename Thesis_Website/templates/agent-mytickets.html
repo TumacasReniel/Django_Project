@@ -1,0 +1,272 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Agent MyTickets </title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="% static 'images/favicon.png' %}'" rel="icon">
+    <link href="% static 'images/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/style3.css' %}" rel="stylesheet">
+    <link href="{% static 'css/table.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+    {% include 'agent-header.html' %}
+
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'agent_dashboard_one' %}">
+                    <i class="bi bi-grid text-success"></i>
+                    <span class="text-success">Dashboard</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link " href="{% url 'agent_mytickets' %}">
+                    <i class="bi bi-file-earmark-text text-success"></i>
+                    <span class="text-success">My Tickets</span>
+                </a>
+            </li>
+
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'agent_tag_tickets' %}">
+                    <i class="bi bi-file-earmark-text text-success"></i>
+                    <span class="text-success">Tag Tickets</span>
+                </a>
+            </li>
+
+        </ul>
+
+    </aside>
+    <!-- End Sidebar-->
+
+
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1 class="text-success">My Tickets</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">Manage your tickets here!</a>
+                    </li>
+
+                </ol>
+            </nav>
+        </div>
+
+        <div class="card overflow-auto ">
+            <div class="col-md-12 shadow small">
+
+                <select name=" " class="ticket_status ">
+                            <option value=" ">All Tickets</option>
+                        </select>
+                <span class="small text-muted ">9 total</span>
+                <span class=" ">Sort by</span>
+                <select name=" " class="ticket_status ">
+                            <option value=" ">All Tickets</option>
+                        </select>
+
+                <input type="text " placeholder="Search... " class="p-1 border border-success m-1 search border border-info ">
+                <button class="btn search-btn btn-secondary p-1 ">Search</button>
+                <button class="btn btn-success p-1 m-1 rounded-pill fw-bold float-end" data-bs-toggle="modal" data-bs-target="#create-ticket"><i class="bi bi-plus"></i>Create Ticket</button>
+
+            </div>
+            <br> {% for ticket in ticket %}{% if ticket.creator_id == user.id %}
+            <a type="button" href="{% url 'view_ticket' ticket.id %}" class="text-dark">
+                <div class="card mb-2 ">
+                    <div class="col-md-12 shadow mb-0 small ">
+                        <div class="row">
+                            <div class="col-md-1 p-3 card-icon  d-flex align-items-center justify-content-end" style="background-color: {{ticket.status.ticket_status_color}};">
+                                <h3 class="rounded-circle bg-light p-2"><i class="bi bi-file-earmark-text "></i></h3>
+                            </div>
+                            <div class="col-md-8 mt-3 mb-3 p-3">
+                                <span><i class="bi bi-card-heading"></i><b> {{ticket.subject}}&nbsp;<i class="text-danger"></b>#{{ticket.id}}</i></span><br>{% for at in at %} {% if at.ticket_id == ticket.id %}
+                                <span><i class="bi bi-headset small text-secondary"> {{at.agent.first_name}}&nbsp;{{at.agent.last_name}}</i> <br> {% endif %} {% endfor %} 
+
+                                <span><i class="bi bi-card-text small"> {{ticket.status}}</i> </span><br>
+                                <span class="float-end small "> <i class="bi bi-calendar"> {{ticket.created_date}} </i> </span>
+                            </div>
+                            <div class="col-md-3 bg-light p-3 ">
+                                <span><i class="bi bi-building "></i> {{ticket.department}}</span><br>
+                                <span><i class="bi bi-sort-up "></i> {{ticket.category}}</span><br> {% if ticket.sub_category %}
+                                <span><i class="bi bi-sort-down "></i> {{ticket.sub_category}}</span><br> {% endif %}
+                                <span><i class="bi bi-flag "></i> {{ticket.priority}}</span><br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <div class="col-md-12 bg-white shadow mb-3 p-1 ">
+                <div class=" ">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#delete-myticket{{ticket.id}}" class="btn p-0 "><i class="bi bi-trash text-danger small m-2 "></i><span class="small ">Delete</span></button>
+                </div>
+            </div>
+            {% include 'agent-delete-ticket-modal.html' %} {% endif %} {% endfor %}
+        </div>
+
+    </main>
+    <!-- End #main -->
+
+    <!-- Create ticket-->
+    <div class="container container-fluid ">
+        <div class="modal fade " id="create-ticket" tabindex="-1" aria-labelledby="create-ticketLabel" aria-hidden="true">
+            <div class="modal-dialog ">
+                <div class="modal-content ">
+                    <div class="modal-header ">
+                        <h5 class="modal-title fw-bold " id="create-ticketLabel ">Create Ticket</h5>
+                        <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="create_ticket" method="POST" id="ticketForm" data-categories-url="{% url 'ajax_load_categories' %}" data-sub-categories-url="{% url 'ajax_load_sub_categories' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class=" modal-body">
+
+                            <input type="hidden" name="id">
+
+                            <input type="hidden" name="creator" value="{{user.id}}">
+
+                            <div class="mb-3 ">
+                                <label for="department" class=" form-label ">Department<span class="text-danger ">*</span></label>
+                                <select name="department" id="id_dep" class="form-select" required>
+                                    <option >Select</option>
+                                    {% for dep in dep %}
+                                    <option value="{{dep.id}}">{{dep.department_name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="mb-3 ">
+                                <label for="category" class="form-label">Category<span class="text-danger ">*</span></label>
+                                <select name="category" id="id_cat" class=" form-select " required>
+                                    <option >Select</option>
+                                   <option class="text-danger small" value="">Please select Department first! </option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3 ">
+                                <label for="sub-category" class=" form-label ">Sub-Category</label>
+                                <select name="sub_category" id="id_sub_c" class=" form-select ">
+                                    <option >Select</option>
+                                    <option class="text-danger small" value="">Please select Category first! </option>
+                                </select>
+                            </div>
+
+
+                            <div class="mb-3 ">
+                                <label for="subject" class="form-label ">Subject<span class="text-danger ">*</span></label>
+                                <input type="text" name="subject" class=" form-control " required>
+                            </div>
+
+                            <div class="mb-3 ">
+                                <label for="description" class="form-label ">Description<span class="text-danger ">*</span></label>
+                                <textarea type="text" name="description" class="form-control" rows="5" required></textarea>
+                            </div>
+
+                            <div class="mb-3 ">
+                                <input type="file" name="attach_file" class="form-control">
+                            </div>
+
+                        </div>
+
+                        <div align="center ">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success" name="create-ticket-btn">Create Ticket</button>
+                        </div>
+                        <br>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End create ticket modal-->
+
+
+
+
+    {% include 'logout.html' %} {% include 'admin-footer.html' %}
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js "></script>
+    <script>
+        $("#id_dep").change(function() {
+            const url = $("#ticketForm").attr("data-categories-url"); // get the url of the `load_cities` view
+            const departmentId = $(this).val(); // get the selected department ID from the HTML input
+
+            $.ajax({ // initialize an AJAX request
+                url: url, // set the url of the request (= /persons/ajax/load-cities/ )
+                data: {
+                    'department_id': departmentId // add the department id to the GET parameters
+                },
+                success: function(data) { // `data` is the return of the `load_cities` view function
+                    $("#id_cat").html(data); // replace the contents of the category input with the data that came from the server
+
+                    /*
+                    let html_data = '<option value=" ">---------</option>';
+                    data.forEach(function(category) {
+                        html_data += `<option value="${category.id} ">${category.name}</option>`
+                    });
+                    console.log(html_data);
+                    $("#id_category").html(html_data);
+
+                    */
+
+
+                }
+            });
+
+        });
+    </script>
+    <script>
+        $("#id_cat").change(function() {
+            const url = $("#ticketForm").attr("data-sub-categories-url"); // get the url of the `load_cities` view
+            const categoryId = $(this).val(); // get the selected category ID from the HTML input
+
+            $.ajax({ // initialize an AJAX request
+                url: url, // set the url of the request (= /persons/ajax/load-cities/ )
+                data: {
+                    'category_id': categoryId // add the category id to the GET parameters
+                },
+                success: function(data) { // `data` is the return of the `load_sub_categories` view function
+                    $("#id_sub_c").html(data); // replace the contents of the sub category input with the data that came from the server
+
+
+                    let html_data = '<option value=" ">---------</option>';
+                    data.forEach(function(subc) {
+                        html_data += `<option value="${subc.id} ">${subc.sub_category_name}</option>`
+                    });
+                    console.log(html_data);
+                    $("#id_category").html(html_data);
+
+
+                }
+            });
+
+        });
+    </script>
+    
+</body>
+
+</html>

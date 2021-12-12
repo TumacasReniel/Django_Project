@@ -1,0 +1,152 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>User Profile </title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="% static 'images/favicon.png' %}'" rel="icon">
+    <link href="% static 'images/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/style3.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+    {% include 'user-header.html' %}
+
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="user_dashboard">
+                    <i class="bi bi-grid text-success"></i>
+                    <span class="text-success">Dashboard</span>
+                </a>
+            </li>
+            <!-- End Dashboard Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="user_mytickets">
+                    <i class="bi bi-file-earmark-text text-success"></i>
+                    <span class="text-success">My Tickets</span>
+                </a>
+            </li>
+            <!-- End Services Page Nav -->
+
+
+
+        </ul>
+
+    </aside>
+    <!-- End Sidebar-->
+
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1 class="text-success">Profile</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">Manage your profile here!</a>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+        <!-- End Page Title -->
+        <div class="col-xxl-4 col-12 ">
+            <div class="card info-card sales-card border border-success overflow-auto">
+
+                <div class="container container-fluid  " id="myprofile">
+                    <div class="row">
+                        <!-- LEFT SIDE -->
+                        <div class="col-sm-4 mt-3">
+                            <center>
+                                <br> {% if user.profile_pic %}
+                                <img src="{{ user.profile_pic.url }}" alt="Profile" class="rounded-circle mt-3" width="170" height="170"> <br>{% else %}
+                                <img src="{% static 'images/avatar.svg' %}" alt="Profile" class="rounded-circle" width="170" height="170"> <br>{% endif %}
+                                <br>
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#change-profile{{user.id}}" class="btn btn-outline-success rounded-pill p-1 mb-3 fw-bold">Change Profile</button><br>
+                                <input type="text" class="text-center" value="USER" readonly>
+                            </center>
+                        </div>
+                        <!-- RIGHT SIDE -->
+                        <div class="col-sm-8">
+                            <div class="container">
+
+                                <form class="row g-2 ">
+                                    <!-- first line -->
+                                    <div class="col-md-12 mt-3">
+                                        <label for="userID" class="form-label">User ID</label>
+                                        <input type="text" class="form-control" value="{{user.id}}" readonly>
+                                    </div>
+                                    <div class="col-md-6 mt-3">
+                                        <label for="first_name" class="form-label ">First Name</label>
+                                        <input type="text" class="form-control" name="first_name" value="{{user.first_name}}" readonly>
+                                    </div>
+                                    <div class="col-md-6 mt-3">
+                                        <label for="first_name" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" name="first_name " value="{{user.last_name}}" readonly>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" value="{{user.email}}" readonly>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <label for="department" class="form-label">Department</label>
+                                        <input type="text" class="form-control" value="{{user.department}}" readonly>
+                                    </div>
+
+                                </form>
+
+                                <div class="m-3">
+                                    <button data-bs-toggle="modal" data-bs-target="#create-ticket" class="btn btn-success text-white fw-bold rounded-pill border border-success mb-2 ">
+                                            <i class=" fa fa-plus "></i>
+                                            Update       
+                                            </button>
+                                    <button data-bs-toggle="modal" data-bs-target="#create-ticket" class="btn btn-secondary text-white fw-bold rounded-pill border border-success mb-2 ">
+                                            <i class=" fa fa-plus "></i>
+                                            Change Password         
+                                             </button>
+
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% include 'user-manage-profile.html' %}
+
+    </main>
+    <!-- End #main -->
+
+    {% include 'logout.html' %} {% include 'admin-footer.html' %}
+</body>
+
+</html>

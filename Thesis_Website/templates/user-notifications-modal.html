@@ -1,0 +1,21 @@
+<!-- NOTIFICATION MODAL-->
+<div class="container container-fluid">
+    <div class="modal fade" id="user-delete-notification{{noti.id}}" abindex="-1">
+        <div class="modal-dialog">
+            <form action="{% url 'user_delete_notification' %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-title"></div>
+                <input type="hidden" name="noti_id" value="{{noti.id}}">
+                <div class="modal-content">
+                    <div class="p-3 m-3">Are you sure you want to delete this notification?</div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                        <button type="submit" class="btn btn-danger">Yes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--END OF NOTIFICATION MODAL-->

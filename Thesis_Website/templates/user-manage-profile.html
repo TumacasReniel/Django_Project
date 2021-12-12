@@ -1,0 +1,38 @@
+{% load static %}
+<!-- Change PRofile picture Modal-->
+<div class="container container-fluid ">
+    <div class="modal fade " id="change-profile{{user.id}}" tabindex="-1" aria-labelledby="add-categoryLabel " aria-hidden="true">
+        <div class="modal-dialog ">
+            <div class="modal-content ">
+                <div class="modal-header ">
+                    <h5 class="modal-title fw-bold ">Change Profile Picture</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'user_change_profile' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="modal-body text-start">
+                        <!-- Inputs -->
+                        <input type="hidden" name="id" value="{{user.id}}">
+                        <center>
+                            <br> {% if user.profile_pic %}
+                            <img src="{{ user.profile_pic.url }}" alt="Profile" class="rounded-circle mt-3" width="170" height="170"> <br>{% else %}
+                            <img src="{% static 'images/avatar.svg' %}" alt="Profile" class="rounded-circle" width="170" height="170"> <br>{% endif %} <br>
+                        </center>
+                        <div class=" mb-3 ">
+                            <input type="file" name="profile_pic" class=" form-control " required>
+                        </div>
+                    </div><br>
+
+                    <div align="center ">
+                        <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success ">Change Profile</button>
+                    </div>
+                    <br>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--end Update categories MODAL-->

@@ -1,0 +1,43 @@
+{% load static %}
+<!--Tag agent on accepted ticket MODAL-->
+<div class="container container-fluid">
+    <div class="modal fade" id="agent-invite-agent" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{% url 'agent_invite_agent' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-header d-flex justify-content-center bg-success bg-gradient text-white fw-bold">
+                        <div class="">
+                            Select the agent you want to tag/invite to this ticket #{{ticket.id}}
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="ticket_id" value="{{ticket.id}}"> {% for agent in agent %} {% if not agent.id == request.user.id %}
+                        <table class="border-solid col-12 ">
+                            <tbody>
+                                <tr></tr>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="invited_agent" value="{{agent.id}}">
+                                    </td>
+                                    <td> {% if agent.profile_pic %}
+                                        <img src="{{agent.profile_pic.url}}" alt="Profile " class="rounded-circle " width="35" height="35"> {% else %}
+                                        <img src="{% static 'images/avatar.svg' %} " alt="Profile" class="rounded-circle " width="35 " height="35"> {% endif %}&nbsp;
+                                        <span>{{agent.first_name}}&nbsp;{{agent.last_name}}</span>
+                                    </td>
+                                </tr>
+                                <tr></tr>
+                            </tbody>
+                        </table>
+                        {% endif %} {% endfor %}
+                    </div>
+                    <div class="modal-footer ">
+                        <button type="button " class="btn btn-secondary " data-bs-dismiss="modal ">Cancel</button>
+                        <button type="submit " class="btn btn-success ">Invite <i class="bi bi-tag "></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end Tag agent on accepted ticket MODAL-->

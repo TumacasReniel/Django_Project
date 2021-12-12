@@ -1,0 +1,177 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>user Departments</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="{% static 'images/favicon.png' %}'" rel="icon">
+    <link href="{% static 'images/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/style3.css' %}" rel="stylesheet">
+    <link href="{% static 'css/table.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+    {% include 'admin-header.html' %}
+
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar text-success">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item ">
+                <a class="nav-link collapsed" href="{% url 'admin_dashboard' %}">
+                    <i class="bi bi-grid text-success"></i>
+                    <span class="text-success">Dashboard</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'admin_tickets' %}">
+                    <i class="bi bi-file-earmark-text text-success"></i>
+                    <span class="text-success">Tickets</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'admin_ticket_statuses' %}">
+                    <i class="bi bi-card-text text-success"></i>
+                    <span class="text-success">Ticket Statuses</span>
+                </a>
+            </li>
+
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'admin_categories' %}">
+                    <i class="bi bi-sort-up text-success"></i>
+                    <span class="text-success">Ticket Other Details</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'admin_users' %}">
+                    <i class="bi bi-people text-success"></i>
+                    <span class="text-success">Users</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'admin_priorities' %}">
+                    <i class="bi bi-flag text-success"></i>
+                    <span class="text-success">Priorities</span>
+                </a>
+            </li>
+        </ul>
+
+    </aside>
+    <!-- End Sidebar-->
+
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1 class="text-success">View More</h1>
+        </div>
+        <!-- End Page Title -->
+
+        <div class="col-xxl-4 col-12 ">
+            <div class="card info-card sales-card border border-success overflow-auto">
+                <div class="">
+                    <a type="button" href="{% url 'admin_users' %}" class="float-end p-1 bg-success text-white">Return to Users</a>
+                </div>
+
+
+                <div class="container container-fluid  " id="myprofile">
+                    <div class="row">
+                        <!-- LEFT SIDE -->
+                        <div class="col-sm-4 mt-3">
+                            <center>
+                                <br> {% if user.profile_pic %}
+                                <img src="{{ user.profile_pic.url }}" alt="Profile" class="rounded-circle mt-3" width="170" height="170"> <br>{% else %}
+                                <img src="{% static 'images/avatar.svg' %}" alt="Profile" class="rounded-circle" width="170" height="170"> <br>{% endif %}
+                                <br>
+
+                                <input type="text" class="text-center" value="{{user.status}}" readonly>
+                            </center>
+                        </div>
+                        <!-- RIGHT SIDE -->
+                        <div class="col-sm-8">
+                            <div class="container p-3">
+
+                                <form class="row g-2 ">
+                                    <!-- first line -->
+                                    <div class="col-md-12 mt-3">
+                                        <label for="userID" class="form-label">User ID</label>
+                                        <input type="text" class="form-control" value="{{user.id}}" readonly>
+                                    </div>
+                                    <div class="col-md-6 mt-3">
+                                        <label for="first_name" class="form-label ">First Name</label>
+                                        <input type="text" class="form-control" name="first_name" value="{{user.first_name}}" readonly>
+                                    </div>
+                                    <div class="col-md-6 mt-3">
+                                        <label for="first_name" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" name="first_name " value="{{user.last_name}}" readonly>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="text" class="form-control" id="email" value="{{user.email}}" readonly>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label for="department" class="form-label">Department</label>
+                                        <input type="text" class="form-control" value="{{user.department}}" readonly>
+                                    </div>
+
+                                </form>
+
+                                <div class="m-3">
+                                    <button data-bs-toggle="modal" data-bs-target="#create-ticket" class="btn btn-success text-white fw-bold rounded-pill border border-success mb-2 ">
+                                            <i class=" fa fa-plus "></i>
+                                            Update       
+                                            </button>
+                                    <button data-bs-toggle="modal" data-bs-target="#create-ticket" class="btn btn-secondary text-white fw-bold rounded-pill border border-success mb-2 ">
+                                            <i class=" fa fa-plus "></i>
+                                            Change Password         
+                                             </button>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </main>
+    <!-- End #main -->
+
+
+
+    {% include 'logout.html' %} {% include 'admin-footer.html' %}
+
+</body>
+
+</html>

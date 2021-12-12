@@ -1,0 +1,6 @@
+{
+    "editor.autoIndent": "brackets",
+    "editor.autoClosingOvertype": "never",
+    "editor.defaultFormatter": "vscode.html-language-features",
+    "editor.detectIndentation": false
+}

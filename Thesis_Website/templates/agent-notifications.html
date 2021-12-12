@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>User Notifications </title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="% static 'images/favicon.png' %}'" rel="icon">
+    <link href="% static 'images/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/style3.css' %}" rel="stylesheet">
+    <link href="{% static 'css/table.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+
+    {% include 'user-header.html' %}
+
+
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'agent_dashboard_one' %}">
+                    <i class="bi bi-grid text-success"></i>
+                    <span class="text-success">Dashboard</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'agent_mytickets' %}">
+                    <i class="bi bi-file-earmark-text text-success"></i>
+                    <span class="text-success">My Tickets</span>
+                </a>
+            </li>
+
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'agent_tag_tickets' %}">
+                    <i class="bi bi-file-earmark-text text-success"></i>
+                    <span class="text-success">Tag Tickets</span>
+                </a>
+            </li>
+
+        </ul>
+
+    </aside>
+    <!-- End Sidebar-->
+
+    <main id="main" class="main">
+        <div class="pagetitle">
+            <h1 class="text-success">Notifications</h1>
+            <nav>
+                <ol class="breadcrumb ">
+                    <li class="breadcrumb-item ">See your Notifications here!</li>
+                </ol>
+            </nav>
+        </div>
+        <!-- End Page Title -->
+        <div class="card p-3 ">
+            {% if all_noti_count == 0 %}
+            <div class="card p-3 mb-3">
+                <div class="text-center">No notifications for now.</div>
+            </div>
+            {% else %} {% for noti in noti %} {% if noti.is_seen %}
+            <a type="button" class="col-md-12" href="{% url 'agent_see_notification' noti.id %}">
+                <div class="card p-3 mb-2 border border-solid border-dark noti-con">
+                    <div class="text-center ">
+                        <span class="text-secondary">{{noti.text_preview}}</span>
+                        <span class="text-danger">#{{noti.ticket.id}}</span>
+                    </div>
+                </div>
+            </a>
+            {% else %}
+
+            <a type="button" class="col-md-12" href="{% url 'agent_see_notification' noti.id %}">
+                <div class="card p-3 mb-2 border border-solid border-dark noti-con ">
+                    <div class="text-center fw-bold ">
+                        <span class="text-secondary ">{{noti.text_preview}}</span>
+                        <span class="text-danger ">#{{noti.ticket.id}}</span>
+                    </div>
+                </div>
+            </a>
+
+            {% endif %}{% endfor %}{% endif %}
+        </div>
+
+    </main>
+    <!-- End #main -->
+
+    {% include 'logout.html ' %} {% include 'admin-footer.html ' %}
+
+</body>
+
+</html>

@@ -1,0 +1,94 @@
+{% load static %}
+
+<!-- view ticket-->
+<div class="container container-fluid ">
+    <div class="modal fade" id="view-ticket{{ticket.id}}" tabindex="-1" aria-labelledby="create-ticketLabel " aria-hidden="true">
+        <div class="modal-dialog modal-lg overflow-auto">
+            <div class="modal-content ">
+                <div class="modal-header ">
+                    <h5 class="modal-title fw-bold " id="create-ticketLabel">View Ticket <span class="text-danger">#{{ticket.id}}</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class=" modal-body  bg-info ">
+                    <div class="card  ">
+                        <div class="col-md-12 shadow mb-3 small overflow-auto">
+                            <div class="row ">
+                                <div class="col-sm-1 p-3">
+                                    <img src="{% static 'images/avatar.svg' %}" alt="Profile" class="rounded-circle prof_pic">
+                                </div>
+                                <div class="col-sm-8 mt-3 mb-3 p-3">
+                                    <span><i class="bi bi-card-heading"></i> {{ticket.subject}}&nbsp;<i class="text-danger">#{{ticket.id}}</i></span><br>
+                                    <!-- <span><i class="bi bi-headset"> Agent Responded 3 hours ago</i>  <br>  -->
+
+                                    <span><i class="bi bi-card-text"> {{ticket.status}}</i> </span>
+                                    <span class="float-end "> <i class="bi bi-calendar"> {{ticket.created_date}} </i> </span>
+                                </div>
+                                <div class="col-sm-3 bg-light p-3 ">
+                                    <span><i class="bi bi-building "></i> {{ticket.department}}</span><br>
+                                    <span><i class="bi bi-sort-up "></i> {{ticket.category}}</span><br>
+                                    <span><i class="bi bi-sort-down "></i> {{ticket.sub_category}}</span><br>
+                                    <span><i class="bi bi-flag "></i> {{ticket.priority}}</span><br>
+                                </div>
+                            </div>
+                        </div>
+                        {% for reply in reply %} {% if reply.ticket_id == ticket.id %}
+                        <div class="col-md-12 shadow mb-3 small bg-light border border-radius p-2 overflow-auto">
+                            <!-- <div class="row">
+                                <div class="col-sm-1 p-3"></div> <img src="{% static 'images/avatar.svg' %}" alt="Profile" class="rounded-circle prof_pic">
+                            </div> -->
+                            <input type="text" value="{{reply.id}}">
+                            <div class=" text-end ">
+                                <button class="btn p-0 " name="reply-btn" type="button" data-bs-toggle="modal" data-bs-target="#delete-reply{{reply.id}}"><i class="bi bi-trash text-danger btn p-0 "></i></button>
+                            </div>
+
+                            <div class="col-sm-11 mt-1 p-2 ">
+                                <p>{{reply.message}}</p>
+                            </div>
+                        </div>
+
+                        {% endif %}{% endfor %}
+
+                    </div>
+
+                    <div class="col-md-12 bg-light shadow mb-3 p-1 accordion-collapse collapse " id="reply_box">
+                        <form action="add_reply" method="POST">
+
+                            {% csrf_token %}
+
+                            <div class="row ">
+                                <input type="hidden" name="ticket" value="{{ticket.id}}">
+                                <div class="col-sm-12 ">
+                                    <textarea class="text-dark p-3 form-control " name="reply_msg" id=" " rows="5" placeholder="Enter your reply message here "></textarea>
+                                </div>
+                                <div class="col-sm-12 ">
+                                    <span class="small "><i class="bi bi-plus "></i>attach file</span>
+                                    <center>
+                                        <button type="submit " class="btn btn-secondary p-1 "><i>
+                                                <svg xmlns="http://www.w3.org/2000/svg " width="16 " height="16 " fill="currentColor " class="bi bi-send-fill " viewBox="0 0 16 16 ">
+                                                <path fill-rule="evenodd " d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89.471-1.178-1.178.471L5.93
+                                9.363l.338.215a.5.5 0 0 1 .154.154l.215.338 7.494-7.494Z "/>
+                                                </svg>
+                                            </i> Send</button>
+                                    </center>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-md-12 bg-white shadow mb-3 p-1 ">
+                        <div class=" ">
+                            <button type="button" data-bs-toggle="collapse" data-bs-target="#reply_box" class="btn p-0 " name="reply_btn"><i class="bi bi-reply small m-2 "></i><span class="small ">Reply</span></button>
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#delete-myticket{{ticket.id}}" class="btn p-0 "><i class="bi bi-trash text-danger small m-2 "></i><span class="small ">Delete</span></button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+</div>
+<!--End view ticket modal-->

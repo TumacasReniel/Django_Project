@@ -1,0 +1,51 @@
+{% load static %}
+<!-- delete myticket MODAL-->
+<div class="container container-fluid">
+    <div class="modal fade" id="delete-myticket{{ticket.id}}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <center>
+                    <form action="agent_delete_ticket" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ticket.id}}">
+                        <div class="modal-body">
+                            Are you sure you want to delete this ticket <span class="text-danger">#{{ticket.id}}</span>?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                            <button type="submit" class="btn btn-danger">Yes</button>
+                        </div>
+                    </form>
+                </center>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end delte myticket MODAL-->
+
+<!--accept ticket MODAL-->
+<div class="container container-fluid">
+    <div class="modal fade" id="accept-ticket{{ticket.id}}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <center>
+                    <form action="accept_ticket" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="agent" value="{{user.id}}">
+                        <input type="hidden" name="id" value="{{ticket.id}}">
+                        <div class="modal-body">
+                            Are you sure you want to accept this ticket <span class="text-danger">#{{ticket.id}}</span>?
+                            <br><br>
+                            <p class="text-secondary"><span class="text-danger">Note:</span> Once you accept tickets you will be the one to handle and resolve it.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                            <button type="submit" class="btn btn-success">Yes</button>
+                        </div>
+                    </form>
+                </center>
+            </div>
+        </div>
+    </div>
+</div>
+<!--accept ticket MODAL-->

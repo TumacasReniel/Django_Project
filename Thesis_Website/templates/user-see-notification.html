@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>User Notifications </title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="% static 'images/favicon.png' %}'" rel="icon">
+    <link href="% static 'images/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/style3.css' %}" rel="stylesheet">
+    <link href="{% static 'css/table.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+
+    {% include 'user-header.html' %}
+
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'user_dashboard' %}">
+                    <i class="bi bi-grid text-success"></i>
+                    <span class="text-success">Dashboard</span>
+                </a>
+            </li>
+            <!-- End Dashboard Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'user_mytickets' %}">
+                    <i class="bi bi-file-earmark-text text-success"></i>
+                    <span class="text-success">My Tickets</span>
+                </a>
+            </li>
+            <!-- End Mytickets Page Nav -->
+
+        </ul>
+
+    </aside>
+    <!-- End Sidebar-->
+
+    <main id="main" class="main">
+        <div class="pagetitle">
+            <h1 class="text-success text-center">View Notification</h1>
+            <br>
+        </div>
+        <!-- End Page Title -->
+        <div class="d-flex justify-content-center">
+            <div class="card col-md-8 p-3">
+
+                <div class="bg-success p-2 text-white">
+                    <h5 class="text-center">{{noti.text_preview}} #{{noti.ticket.id}}</h5>
+                </div>
+                <br>
+                <div class="card-body">
+                    <div>
+                        <p class="">Hi {{noti.ticket.creator.first_name}},</p>
+                        <p>&nbsp;Good day to you! I'm <span class="fw-bold">{{noti.sender.first_name}} {{noti.sender.last_name}}</span> your agent for this ticket.</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="float-end">
+                        <a href="{% url 'user_notifications' %}"><button class=" btn-success ">Ok</button></a>
+                        <button class="btn-danger" data-bs-toggle="modal" data-bs-target="#user-delete-notification{{noti.id}}">Delete<i class="bi bi-trash "></i></button>
+                    </div>
+                </div>
+                {% include 'user-notifications-modal.html' %}
+
+            </div>
+        </div>
+
+    </main>
+    <!-- End #main -->
+
+    {% include 'logout.html ' %} {% include 'admin-footer.html ' %}
+
+</body>
+
+</html>

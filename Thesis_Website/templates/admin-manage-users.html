@@ -1,0 +1,294 @@
+<!-- update users MODAL-->
+<div class="container container-fluid">
+    <div class="modal fade" id="update-account{{u.id}}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Update Account</h5>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'admin_update_account' %}" method="POST">
+                        {% csrf_token %} {% if u.status == "ADMINISTRATOR" %}
+                        <div>
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{u.id}}">
+                            <div class="mb-3">
+                                <label for="first-name" class="form-label ">First Name</label>
+                                <input type="text" name="first_name" class=" form-control " value="{{u.first_name}}">
+                            </div>
+                            <div class="mb-3 ">
+                                <label for="last-name" class="form-label ">Last Name</label>
+                                <input type="text" name="last_name" class=" form-control " value="{{u.last_name}}">
+                            </div>
+                            <div class="mb-3 ">
+                                <label for="uname" class="form-label ">Username</label>
+                                <input type="text" name="username" class=" form-control " value="{{u.username}}">
+                            </div>
+
+                            <input type="hidden" name="password" class=" form-control " value="{{u.password}} ">
+
+                            <div class="mb-3 ">
+                                <label for="email" class="form-label ">Email</label>
+                                <input type="email" name="email" class=" form-control " value="{{u.email}} ">
+                            </div>
+
+
+                            <div class="mb-3 ">
+                                <label for="email" class="form-label">Status</label>
+                                <select name="status" class="form-select">
+                                    {% if u.status == "ADMINISTRATOR" %}
+                                    <option value="{{u.status}}">
+                                        {{u.status}}
+                                    </option>
+                                    <option value="SUPPORT AGENT">SUPPORT AGENT</option>
+                                    <option value="USER">USER</option>
+
+                                    {% elif u.status == "SUPPORT AGENT" %}
+                                    <option value="{{u.status}}">
+                                        {{u.status}}
+                                    </option>
+                                    <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+                                    <option value="u">u</option>
+                                    
+                                    {% elif u.status == "USER" %}
+                                    <option value="{{u.status}}">
+                                        {{u.status}}
+                                    </option>
+                                    <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+                                    <option value="SUPPORT AGENT">SUPPORT AGENT</option>
+
+                                    {% endif %}
+                                </select>
+
+                                <div class="mb-3 ">
+                                    <label for="department" class=" form-label ">Department </label>
+                                    <select name="department" id="id_department" class="form-select " required>
+                                        <option value="{{u.department_id}}">{{u.department}}</option>
+                                        {% for dep in dep %}{% if not dep.id == u.department_id %}
+                                        <option value="{{dep.id}}">{{dep.department_name}}</option>
+                                        {% endif %} {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="text-center ">
+                                <a type="button " class="btn btn-secondary rounded-pill " data-bs-dismiss="modal">Cancel</a>
+                                <input class="btn btn-success rounded-pill " type="submit" name="Yes" value="Update">
+                            </div>
+
+                        </div>
+                        {% elif u.status == "SUPPORT AGENT" %}
+                        <div>
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{u.id}}">
+                            <div class="mb-3">
+                                <label for="first-name" class="form-label ">First Name</label>
+                                <input type="text" name="first_name" class=" form-control " value="{{u.first_name}}">
+                            </div>
+                            <div class="mb-3 ">
+                                <label for="last-name" class="form-label ">Last Name</label>
+                                <input type="text" name="last_name" class=" form-control " value="{{u.last_name}}">
+                            </div>
+                            <div class="mb-3 ">
+                                <label for="uname" class="form-label ">Username</label>
+                                <input type="text" name="username" class=" form-control " value="{{u.username}}">
+                            </div>
+
+                            <input type="hidden" name="password" class=" form-control " value="{{u.password}}">
+
+                            <div class="mb-3 ">
+                                <label for="email" class="form-label ">Email</label>
+                                <input type="email" name="email" class=" form-control " value="{{u.email}} ">
+                            </div>
+
+                            <div class="mb-3 ">
+                                <label for="email" class="form-label">Status</label>
+                                <select name="status" class="form-select">
+                                    {% if u.status == "ADMINISTRATOR" %}
+                                    <option value="{{u.status}}">
+                                        {{u.status}}
+                                    </option>
+                                    <option value="SUPPORT AGENT">SUPPORT AGENT</option>
+                                    <option value="u">u</option>
+
+                                    {% elif u.status == "SUPPORT AGENT" %}
+                                    <option value="{{u.status}}">
+                                        {{u.status}}
+                                    </option>
+                                    <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+                                    <option value="USER">USER</option>
+                                    
+                                    {% elif u.status == "USER" %}
+                                    <option value="{{u.status}}">
+                                        {{u.status}}
+                                    </option>
+                                    <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+                                    <option value="SUPPORT AGENT">SUPPORT AGENT</option>
+
+                                    {% endif %}
+                                </select>
+                            </div>
+
+                            <div class="mb-3 ">
+                                <label for="department" class=" form-label ">Department </label>
+                                <select name="department" id="id_department" class="form-select " required>
+                                        <option value="{{u.department_id}}">{{u.department}}</option>
+                                        {% for dep in dep %}{% if not dep.id == u.department_id %}
+                                        <option value="{{dep.id}}">{{dep.department_name}}</option>
+                                        {% endif %} {% endfor %}
+                                    </select>
+                            </div>
+
+
+                            <div class="text-center ">
+                                <a type="button " class="btn btn-secondary rounded-pill " data-bs-dismiss="modal">Cancel</a>
+                                <input class="btn btn-success rounded-pill " type="submit" name="Yes " value="Update ">
+                            </div>
+
+                        </div>
+                        {% elif u.status == "USER" %}
+                        <div>
+                            {% csrf_token %}
+                            <input type="text" name="id" value="{{u.id}}">
+                            <div class="mb-3">
+                                <label for="first-name" class="form-label ">First Name</label>
+                                <input type="text" name="first_name" class=" form-control " value="{{u.first_name}}">
+                            </div>
+                            <div class="mb-3 ">
+                                <label for="last-name" class="form-label ">Last Name</label>
+                                <input type="text" name="last_name" class=" form-control " value="{{u.last_name}}">
+                            </div>
+                            <div class="mb-3 ">
+                                <label for="uname" class="form-label ">Username</label>
+                                <input type="text" name="username" class=" form-control " value="{{u.username}}">
+                            </div>
+
+                            <div class="mb-3 ">
+                                <label for="email" class="form-label ">Email</label>
+                                <input type="email" name="email" class=" form-control " value="{{u.email}} ">
+                            </div>
+                            <div class="mb-3 ">
+                                <label for="email" class="form-label">Status</label>
+                                <select name="status" class="form-select">
+                                {% if u.status == "ADMINISTRATOR" %}
+                                <option value="{{u.status}}">
+                                    {{u.status}}
+                                </option>
+                                <option value="SUPPORT AGENT">SUPPORT AGENT</option>
+                                <option value="USER">USER</option>
+
+                                {% elif u.status == "SUPPORT AGENT" %}
+                                <option value="{{u.status}}">
+                                    {{u.status}}
+                                </option>
+                                <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+                                <option value="USER">USER</option>
+                                
+                                {% elif u.status == "USER" %}
+                                <option value="{{u.status}}">
+                                    {{u.status}}
+                                </option>
+                                <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+                                <option value="SUPPORT AGENT">SUPPORT AGENT</option>
+
+                                {% endif %}
+                            </select>
+
+                            </div>
+                            <div class="mb-3 ">
+                                <label for="department" class=" form-label ">Department </label>
+                                <select name="department" id="id_department" class="form-select " required>
+                                    <option value="{{u.department_id}}">{{u.department}}</option>
+                                    {% for dep in dep %}{% if not dep.id == u.department_id %}
+                                    <option value="{{dep.id}}">{{dep.department_name}}</option>
+                                    {% endif %}{% endfor %}
+                                </select>
+                            </div>
+                            <div class="text-center ">
+                                <a type="button" class="btn btn-secondary rounded-pill " data-bs-dismiss="modal">Cancel</a>
+                                <input class="btn btn-success rounded-pill " type="submit" name="update" value="Update">
+                            </div>
+
+                        </div>{% endif %}
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--end update uMODAL-->
+
+<!-- delete ticket status MODAL-->
+<div class="container container-fluid">
+    <div class="modal fade" id="delete-account{{u.id}}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <center>
+                    <form action="{% url 'admin_delete_account' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{u.id}}">
+                        <div class="modal-body">
+                            Are you sure you want to delete this user
+                            <span class="text-danger"> "{{u.first_name}}&nbsp;{{u.last_name}}"</span>?
+                            <br><br>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                            <button type="submit" class="btn btn-danger">Yes</button>
+                        </div>
+                    </form>
+                </center>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end delete myticket MODAL-->
+
+
+
+<!-- dmin_update_agent_assigned MODAL-->
+<div class="container container-fluid">
+    <div class="modal fade" id="update-agent-assigned{{u.id}}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Update Agent Assigned</h5>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'admin_update_agent_assigned' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{u.id}}">
+
+                        <div class="mb-3 ">
+                            <label for="category" class="form-label ">Category </label>
+                            <select name="category" class="form-select " required>
+                                {% for agent in agent %} 
+                                    {% if agent.user_id == u.id %}
+                                        <option value="{{agent.category}}">{{agent.category}}</option>
+                                        {% for cat in cat %}
+                                            {% if not cat.id == agent.category_id %} 
+                                                <option value="{{cat.id}}">{{cat.category_name}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %} 
+                                {% endfor %}
+                                 
+                                </select>
+                        </div>
+                        <div class="mb-3 ">
+                            {% for agent in agent %} {% if agent.user_id == u.id %}
+                            <label for="level" class="form-label ">Level</label>
+                            <input type="number" name="level" class="form-control " value="{{agent.level}}" required> {% endif %} {% endfor %}
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end dmin_update_agent_assigned MODAL-->

@@ -1,0 +1,193 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Agent Dashboard </title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="% static 'images/favicon.png' %}'" rel="icon">
+    <link href="% static 'images/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/style3.css' %}" rel="stylesheet">
+    <link href="{% static 'css/table.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+    {% include 'agent-header.html' %}
+
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'agent_dashboard_one' %}">
+                    <i class="bi bi-grid text-success"></i>
+                    <span class="text-success">Dashboard</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'agent_mytickets' %}">
+                    <i class="bi bi-file-earmark-text text-success"></i>
+                    <span class="text-success">My Tickets</span>
+                </a>
+            </li>
+
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'agent_tag_tickets' %}">
+                    <i class="bi bi-file-earmark-text text-success"></i>
+                    <span class="text-success">Tag Tickets</span>
+                </a>
+            </li>
+
+        </ul>
+
+    </aside>
+    <!-- End Sidebar-->
+
+
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1 class="text-success">View Accepted Ticket</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">Reply tickets here!</a>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+        <!-- End Page Title -->
+
+        <div class=" d-flex justify-content-end">
+            <a type="button" href="{% url 'agent_accepted_tickets' %}" class="btn btn-success rounded-pill m-3 add-dep-btn ">
+                <i class=" bi bi-back "></i> Return to Accepted Tickets
+            </a>
+        </div>
+
+        <div class="card  ">
+            <div class="col-md-12  mb-0 small ">
+                <div class="row ">
+                    <div class="col-sm-8 mt-3 mb-3 p-3">
+
+                        <h6><span class="fw-bold p-3"><i class="bi bi-card-heading"></i> {{ticket.subject}}&nbsp;<i class="text-danger">#{{ticket.id}}</i></span> </h6><br> {% if ticket.creator.profile_pic %}
+                        <img src="{{ ticket.creator.profile_pic.url }}" alt="Profile" class="rounded-circle" width="35" height="35"> {% else %}
+                        <img src="{% static 'images/avatar.svg' %}" alt="Profile" class="rounded-circle" width="45" height="45"> {% endif %}
+
+                        <span class="small">{{ticket.creator.first_name}}&nbsp;{{ticket.creator.last_name}}</span>
+                        <span class="p-3"><i class="bi bi-card-text small"> {{ticket.status}}</i> </span>{% for at in at %} {% if at.ticket_id == ticket.id %}
+                        <span><i class="bi bi-headset small text-secondary"> {{at.agent.first_name}}&nbsp;{{at.agent.last_name}}</i></span> <span><i class="bi bi-headset small text-secondary"> {{at.invited_agent.first_name}}&nbsp;{{at.invited_agent.last_name}}</i> <br></span>                        {% endif %} {% endfor %} {% if ticket.attach_file %}
+                        <span class="p-3"><i class="bi bi-file-earmark-image small"> <a href="{{ticket.attach_file.url}}">view attach file</a></i> </span>{% endif %}
+                        <span class="small float-end"> <i class="bi bi-calendar"> {{ticket.created_date}} </i> 
+                    </div>
+
+
+        
+
+
+
+                        <div class="col-sm-4 bg-light p-3 "><br>
+                            <span><i class="bi bi-building "></i> {{ticket.department}}</span><br>
+                        <span><i class="bi bi-sort-up "></i> {{ticket.category}}</span><br>
+                        <span><i class="bi bi-sort-down "></i> {{ticket.sub_category}}</span><br>
+                        <span><i class="bi bi-flag "></i> {{ticket.priority}}</span><br>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-12 shadow mb-1 small p-3 border-radius  ">
+                <span>
+                    <p class="m-3 text-indent"></p><i class="bi bi-card-text "></i>
+                    {{ticket.description}}</p>
+                </span>
+            </div>
+        </div>
+        <div class="small">
+            replies(<span class="text-danger">{{replies_count}}</span>)
+        </div>
+        {% for reply in reply %} {% if reply.ticket_id == ticket.id %}
+        <div class="card col-md-12 mb-1 small  border border-radius p-3 ">
+            <input type="hidden" value="{{reply.id}}">
+            <div class=" text-end ">
+                {% if request.user.id == reply.sender.id %}
+                <button class="btn p-0 " name="reply-btn" type="button" data-bs-toggle="modal" data-bs-target="#delete-reply{{reply.id}}"><i class="bi bi-trash text-danger btn p-0 "></i></button> {% endif %}
+            </div>
+            <div class="col-sm-11 mt-1 p-2 ">
+                {% if reply.sender.profile_pic %}
+                <img src="{{ reply.sender.profile_pic.url }}" alt="Profile" class="rounded-circle" width="35" height="35"> {% else %}
+                <img src="{% static 'images/avatar.svg' %}" alt="Profile" class="rounded-circle" width="45" height="45"> {% endif %}
+
+                <span class="small p-3"> {{reply.sender.first_name}}&nbsp;{{reply.sender.last_name}}</span>{% if reply.attach_file %}
+                <span class="small p-3"><i class="bi bi-file-earmark-image"> <a href="{{reply.attach_file.url}}">view attach file</a></i> </span>{% endif %}
+                <span class="small"> <i class="bi bi-calendar"> {{reply.ticket.created_date}} </i> </span>
+                <p class="m-3">{{reply.message}}</p>
+
+            </div>
+        </div>
+
+        {% include 'agent-delete-reply-modal.html' %} {% endif %}{% endfor %}
+
+        <div class="card col-md-12 shadow mb-3 p-1 accordion-collapse collapse " id="reply_box">
+            <form action="{% url 'agent_add_reply_on_accepted_ticket' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="row ">
+                    <input type="hidden" name="ticket" value="{{ticket.id}}">
+                    <div class="col-sm-12 ">
+                        <textarea class="text-dark p-3 form-control " name="reply_msg" rows="5" placeholder="Enter your reply message here " required></textarea>
+                    </div>
+                    <div class="col-sm-12  ">
+                        <input type="file" class="small mt-1 mb-2" name="reply_attach_file">
+                        <center>
+                            <button type="submit" class="btn btn-secondary p-1"><i>
+                                    <svg xmlns="http://www.w3.org/2000/svg " width="16 " height="16 " fill="currentColor " class="bi bi-send-fill " viewBox="0 0 16 16 ">
+                                    <path fill-rule="evenodd " d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89.471-1.178-1.178.471L5.93
+                    9.363l.338.215a.5.5 0 0 1 .154.154l.215.338 7.494-7.494Z "/>
+                                    </svg></i> Send
+                            </button>
+                        </center>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-12 bg-white shadow mb-3 p-1 ">
+            <div class=" ">
+                <button type="button" data-bs-toggle="collapse" data-bs-target="#reply_box" class="btn p-0 " name="reply_btn"><i class="bi bi-reply small m-2 "></i><span class="small ">Reply</span></button>
+                <span></span>{% for at in at %}{% if at.ticket.id == ticket.id %}{% if not at.invited_agent %}
+                <button type="button" data-bs-toggle="modal" data-bs-target="#agent-invite-agent" class="btn p-0 "><i class="bi bi-tag text-danger small m-2 "></i><span class="small ">Invite Agent</span>
+                </button> {% endif %}{% endif %}{% endfor %}
+            </div>
+        </div>
+        {% include 'agent-delete-ticket-modal.html' %} {% include 'agent-invite-agent-modal.html' %}
+
+
+    </main>
+    <!-- End #main -->
+
+    {% include 'logout.html' %} {% include 'admin-footer.html' %}
+
+</body>
+
+</html>

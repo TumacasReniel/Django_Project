@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>User Dashboard </title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="% static 'images/favicon.png' %}'" rel="icon">
+    <link href="% static 'images/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/style3.css' %}" rel="stylesheet">
+    <link href="{% static 'css/table.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+
+    {% include 'user-header.html' %}
+
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link " href="user_dashboard">
+                    <i class="bi bi-grid text-success"></i>
+                    <span class="text-success">Dashboard</span>
+                </a>
+            </li>
+            <!-- End Dashboard Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="user_mytickets">
+                    <i class="bi bi-file-earmark-text text-success"></i>
+                    <span class="text-success">My Tickets</span>
+                </a>
+            </li>
+            <!-- End Mytickets Page Nav -->
+
+        </ul>
+
+    </aside>
+    <!-- End Sidebar-->
+
+    <main id="main" class="main">
+        <div class="pagetitle">
+            <h1 class="text-success">Dashboard</h1>
+            <nav>
+                <ol class="breadcrumb ">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item ">Dashboard</li>
+                </ol>
+            </nav>
+        </div>
+        <!-- End Page Title -->
+        <div class="card p-2 mb-3">
+
+            <div class="col-md-2 bg-info ">
+                <select name="" class="form-select p-1">
+                    <option value="">Sort By</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-4">
+                <div class="card text-center text-white  mb-3" id="total-orders">
+                    <div class="card-header">
+                        <h5 class="card-title">Total Created Tickets</h5>
+                        <p>
+                            <h3 class="card-title">{{total_ticket_count}}</h3>
+                        </p>
+                    </div>
+                    <div class="card-body bg-warning">
+
+                    </div>
+
+                </div>
+            </div>
+
+            {% for ts in ts %}
+            <div class="col-md-4">
+                <div class="card text-center text-white  mb-3" id="total-orders">
+                    <div class="card-header">
+                        <h5 class="card-title">Total {{ts.ticket_status_name}} Tickets</h5>
+                        <p>
+                            {% if ts.ticket_status_name == "Pending" %}
+                            <h3 class="card-title">
+                                {{ pending_ticket_count }}
+                            </h3>
+                            {% elif ts.ticket_status_name == "Processing" %}
+                            <h3 class="card-title">
+                                {{ processing_ticket_count }}
+                            </h3>
+                            {% elif ts.ticket_status_name == "Resolved" %}
+                            <h3 class="card-title">
+                                {{ resolved_ticket_count }}
+                            </h3>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="card-body" style="background-color:{{ts.ticket_status_color}}" ;>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </main>
+    <!-- End #main -->
+
+    <!-- Create ticket-->
+    <div class="container container-fluid ">
+        <div class="modal fade " id="create-ticket" tabindex="-1 " aria-labelledby="create-ticketLabel" aria-hidden="true ">
+            <div class="modal-dialog ">
+                <div class="modal-content ">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold" id="create-ticketLabel">Create Ticket</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action=" " method="POST ">
+                        {% csrf_token %}
+
+                        <div class="modal-body">
+                            <!-- Inputs -->
+                            <input type="hidden" name="id">
+
+                            <div class="mb-3 ">
+                                <label for="category" class="form-label ">Category</label>
+                                <input type="text" name="category" class=" form-control " aria-describedby="ID-help " required>
+                            </div>
+
+                            <div class="mb-3 ">
+                                <label for="sub-category" class="form-label ">Sub-Category</label>
+                                <input type="text" name="sub_category" class=" form-control " aria-describedby="ID-help " required>
+                            </div>
+
+                            <div class="mb-3 ">
+                                <label for="department" class="form-label ">Department</label>
+                                <input type="text" name="department" class=" form-control " aria-describedby="ID-help " required>
+                            </div>
+
+                            <div class="mb-3 ">
+                                <label for="subject" class="form-label ">Subject</label>
+                                <input type="text" name="subject" class=" form-control " aria-describedby="ID-help " required>
+                            </div>
+
+                            <div class="mb-3 ">
+                                <label for="description" class="form-label ">Description</label>
+                                <textarea type="text" name="description" class=" form-control " rows="5" ria-describedby="ID-help " required></textarea>
+                            </div>
+
+                            <div class="mb-3 ">
+                                <input type="file" name="attach_file" class="form-control" aria-describedby="ID-help ">
+                            </div>
+                        </div>
+
+                        <div align="center ">
+                            <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success " name="create-ticket-btn">Create Ticket</button>
+                        </div>
+                        <br>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End create ticket modal-->
+    {% include 'user-notifications-modal.html' %} {% include 'logout.html' %} {% include 'admin-footer.html' %}
+
+</body>
+
+</html>

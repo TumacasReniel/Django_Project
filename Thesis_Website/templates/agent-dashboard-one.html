@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Agent Dashboard </title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="% static 'images/favicon.png' %}'" rel="icon">
+    <link href="% static 'images/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/style3.css' %}" rel="stylesheet">
+    <link href="{% static 'css/table.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+    {% include 'agent-header.html' %}
+
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'agent_dashboard_one' %}">
+                    <i class="bi bi-grid text-success"></i>
+                    <span class="text-success">Dashboard</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'agent_mytickets' %}">
+                    <i class="bi bi-file-earmark-text text-success"></i>
+                    <span class="text-success">My Tickets</span>
+                </a>
+            </li>
+
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'agent_tag_tickets' %}">
+                    <i class="bi bi-file-earmark-text text-success"></i>
+                    <span class="text-success">Tag Tickets</span>
+                </a>
+            </li>
+
+        </ul>
+
+    </aside>
+    <!-- End Sidebar-->
+
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1 class="text-success">Dashboard</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">Home</a>
+                    </li>
+                    <li class="breadcrumb-item ">Dashboard</li>
+                </ol>
+            </nav>
+        </div>
+        <!-- End Page Title -->
+
+        <section class="section dashboard">
+            <div class="row">
+
+                <!-- Left side columns -->
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <div class="row m-1">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <th>
+                                            <div class="col-sm-3">
+                                                <a href="{% url 'agent_dashboard_one' %}">
+                                                    <h6 class="m-1 text-white"><u class="text-info fw-bold"> <span class="text-white">My Tickets</span></u></h6>
+                                                </a>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="col-sm-3">
+                                                <a href="{% url 'agent_dashboard_two' %}">
+                                                    <h6 class="m-1 text-white">Tag Tickets</h6>
+                                                </a>
+                                            </div>
+                                        </th>
+                                    </div>
+
+                                </div>
+                        </tr>
+                    </thead>
+                </table>
+
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="card text-center text-white  mb-3" id="total-orders">
+                            <div class="card-header">
+                                <h5 class="card-title">Total Created Tickets</h5>
+                                <p>
+                                    <h3 class="card-title">{{total_ticket_count}}</h3>
+                                </p>
+                            </div>
+                            <div class="card-body bg-warning">
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {% for ts in ts %}
+                    <div class="col-md-4">
+                        <div class="card text-center text-white  mb-3" id="total-orders">
+                            <div class="card-header">
+                                <h5 class="card-title">Total {{ts.ticket_status_name}} Tickets</h5>
+                                <p>
+                                    {% if ts.ticket_status_name == "Pending" %}
+                                    <h3 class="card-title">
+                                        {{ pending_ticket_count }}
+                                    </h3>
+                                    {% elif ts.ticket_status_name == "Processing" %}
+                                    <h3 class="card-title">
+                                        {{ processing_ticket_count }}
+                                    </h3>
+                                    {% elif ts.ticket_status_name == "Resolved" %}
+                                    <h3 class="card-title">
+                                        {{ resolved_ticket_count }}
+                                    </h3>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="card-body" style="background-color:{{ts.ticket_status_color}}" ;>
+
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+
+                </div>
+                <!-- End Left side columns -->
+
+
+    </main>
+    <!-- End #main -->
+    {% include 'logout.html' %} {% include 'admin-footer.html' %}
+
+</body>
+
+</html>

@@ -1,0 +1,56 @@
+<!-- Assign Modal-->
+<div class="container container-fluid ">
+    <div class="modal fade " id="assign-agent{{agent.id}}" tabindex="-1 " aria-labelledby="add-departmentLabel " aria-hidden="true ">
+        <div class="modal-dialog ">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold " id="addDepLabel ">Assign Agent</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="assign_agent" method="POST">
+                    {% csrf_token %}
+
+                    <div class="modal-body">
+                        <!-- Inputs -->
+                        <input type="hidden" name="user" value="{{agent.id}}">
+
+                        <div class="mb-3">
+                            <label>Support Agent/Assignee</label>
+                            <input type="text" class="form-control" value="{{agent.first_name}}&nbsp;{{agent.last_name}}" readonly>
+                        </div>
+                        <div class="mb-3 ">
+                            <label for="department" class=" form-label ">Department </label>
+                            <select name="department" class="form-select" required>
+                                    <option value="">Select</option>
+                                    {% for dep in dep %}
+                                    <option value="{{dep.id}}">{{dep.department_name}}</option>
+                                    {% endfor %}
+                                </select>
+                        </div>
+                        <div class="mb-3 ">
+                            <label for="category" class="form-label ">Category </label>
+                            <select name="category" class="form-select" required>
+                                    <option value="">Select</option>
+                                    {% for cat in cat %}
+                                    <option value="{{cat.id}}">{{cat.category_name}}</option>
+                                    {% endfor %}
+                                </select>
+                        </div>
+                        <div class="mb-3 ">
+                            <label for="level" class="form-label ">Level</label>
+                            <input type="number" name="level" class="form-control" required>
+                        </div>
+
+                        <input type="text" name="assign" value="True">
+                    </div>
+
+                    <div align="center ">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success" name="add-department-btn">Assign Agent</button>
+                    </div>
+                    <br>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+<!-- update departments MODAL-->
+<div class="container container-fluid">
+    <div class="modal fade" id="update-department{{dep.id}}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Update Department</h5>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'admin_update_department' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{dep.id}}">
+                        <div class="mb-3">
+                            <label for="ticket-status-name" class="form-label ">Department Name</label>
+                            <input type="text" name="department_name" class=" form-control " value="{{dep.department_name}}">
+                        </div>
+
+                        <div class="text-center">
+                            <a type="button" class="btn btn-secondary rounded-pill " data-bs-dismiss="modal">Cancel</a>
+                            <input class="btn btn-success rounded-pill" type="submit" name="Yes" value="Update">
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--end update departmentMODAL-->
+
+<!-- delete ticket status MODAL-->
+<div class="container container-fluid">
+    <div class="modal fade" id="delete-department{{dep.id}}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <center>
+                    <form action="{% url 'admin_delete_department' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{dep.id}}">
+                        <div class="modal-body">
+                            Are you sure you want to delete this department
+                            <span class="text-danger"> "{{dep.department_name}}"</span>?
+                            <br><br>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                            <button type="submit" class="btn btn-danger">Yes</button>
+                        </div>
+                    </form>
+                </center>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end delete myticket MODAL-->

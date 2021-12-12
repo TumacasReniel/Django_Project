@@ -1,0 +1,280 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Admin Dashboard </title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="{% static 'images/favicon.png' %}'" rel="icon">
+    <link href="{% static 'images/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/style3.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+    {% include 'admin-header.html' %}
+
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar text-success">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item ">
+                <a class="nav-link " href="{% url 'admin_dashboard' %}">
+                    <i class="bi bi-grid text-success"></i>
+                    <span class="text-success">Dashboard</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'admin_tickets' %}">
+                    <i class="bi bi-file-earmark-text text-success"></i>
+                    <span class="text-success">Tickets</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'admin_ticket_statuses' %}">
+                    <i class="bi bi-card-text text-success"></i>
+                    <span class="text-success">Ticket Statuses</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'admin_categories' %}">
+                    <i class="bi bi-sort-up text-success"></i>
+                    <span class="text-success">Ticket Other Details</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'admin_users' %}">
+                    <i class="bi bi-people text-success"></i>
+                    <span class="text-success">Users</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'admin_priorities' %}">
+                    <i class="bi bi-flag text-success"></i>
+                    <span class="text-success">Priorities</span>
+                </a>
+            </li>
+        </ul>
+
+    </aside>
+    <!-- End Sidebar-->
+
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1 class="text-success">Dashboard</h1>
+            <nav>
+                <ol class="breadcrumb ">
+                    <li class="breadcrumb-item"><a href="admin_dashboard">Home</a></li>
+                    <li class="breadcrumb-item">Dashboard</li>
+                </ol>
+            </nav>
+        </div>
+        <!-- End Page Title -->
+
+        <section class="section dashboard">
+            <div class="row">
+
+                <!-- Left side columns -->
+                <div class="row">
+
+                    <!-- Tickets -->
+                    <div class="col-xxl-4 col-md-4">
+                        <div class="card info-card sales-card">
+                            <a href="admin_tickets">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success">Tickets</h5>
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-file-earmark-text text-success"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6 class="text-success">{{tickets_count}}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- End Tickets -->
+
+
+                    <!-- Ticket Statuses -->
+                    <div class="col-xxl-4 col-md-4">
+                        <div class="card info-card sales-card">
+                            <a href="admin_ticket_statuses">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success">Ticket Statuses</h5>
+
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-card-text text-success"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6 class="text-success">{{ts_count}}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+
+                        </div>
+                    </div>
+                    <!-- End Ticket Statuses -->
+
+                    {% if request.user.is_superuser %}
+                    <!-- Departments -->
+                    <div class="col-xxl-4 col-md-4">
+                        <div class="card info-card sales-card">
+                            <a href="admin_departments">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success">Departments</h5>
+
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-building text-success"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6 class="text-success">{{dep_count}}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                    <!-- Users -->
+                    <div class="col-xxl-4 col-md-4">
+                        <div class="card info-card sales-card">
+                            <a href="admin_users">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success">Users</span>
+                                    </h5>
+
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-people text-success"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            {% if request.user.is_superuser %}
+                                            <h6 class="text-success">{{all_user_count}}</h6>
+                                            {% else %}
+                                            <h6 class="text-success">{{user_count}}</h6>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- End Users -->
+
+                    <!-- Categories -->
+                    <div class="col-xxl-4 col-md-4">
+                        <div class="card info-card sales-card">
+                            <a href="admin_categories">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success">Categories</span>
+                                    </h5>
+
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-sort-up text-success"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            {% if request.user.is_superuser %}
+                                            <h6 class="text-success">{{all_cat_count}}</h6>
+                                            {% else %}
+                                            <h6 class="text-success">{{cat_count}}</h6>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- End Categories -->
+
+                    <!-- Sub-Categories -->
+                    <div class="col-xxl-4 col-md-4">
+                        <div class="card info-card sales-card">
+                            <a href="admin_categories">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success">Sub-Categories</span>
+                                    </h5>
+
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-sort-up-alt text-success"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            {% if request.user.is_superuser %}
+                                            <h6 class="text-success">{{all_subc_count}}</h6>
+                                            {% else %}
+                                            <h6 class="text-success">{{subc_count}}</h6>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- End Sub-Categories -->
+
+                    <!-- Priorities -->
+                    <div class="col-xxl-4 col-md-4">
+                        <div class="card info-card sales-card">
+                            <a href="admin_priorities">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success">Priorities</span>
+                                    </h5>
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-flag text-success"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6 class="text-success">{{priority_count}}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- End Priorities -->
+
+                </div>
+                <!-- End Left side columns -->
+
+
+    </main>
+    <!-- End #main -->
+
+    {% include 'logout.html' %} {% include 'admin-footer.html' %}
+
+</body>
+
+</html>

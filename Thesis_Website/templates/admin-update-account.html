@@ -1,0 +1,245 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+    <style>
+        .update_box {
+            /* bring your own prefixes */
+            transform: translate(-50%, -50%);
+            background-color: #009879;
+            border-color: rgb(6, 46, 6);
+            border-radius: 20px;
+            border-width: 20px;
+            border: solid;
+            width: 400px;
+            margin-top: 30%;
+            margin-left: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="update_box p-3 text-white ">
+        <h3 class="text-center mb-3">
+            Update Account
+        </h3>
+        <br>
+        <form method="POST" action="">
+            {% if user.status == "ADMINISTRATOR" %}
+            <div>
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{user.id}}">
+                <div class="mb-3">
+                    <label for="first-name" class="form-label ">First Name</label>
+                    <input type="text" name="first_name" class=" form-control " value="{{user.first_name}}">
+                </div>
+                <div class="mb-3 ">
+                    <label for="last-name" class="form-label ">Last Name</label>
+                    <input type="text" name="last_name" class=" form-control " value="{{user.last_name}}">
+                </div>
+                <div class="mb-3 ">
+                    <label for="username" class="form-label ">Username</label>
+                    <input type="text" name="username" class=" form-control " value="{{user.username}}">
+                </div>
+
+                <input type="hidden" name="password" class=" form-control " value="{{user.password}} ">
+
+                <div class="mb-3 ">
+                    <label for="email" class="form-label ">Email</label>
+                    <input type="email" name="email" class=" form-control " value="{{user.email}} ">
+                </div>
+                <div class="mb-3 ">
+                    <label for="email" class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        {% if user.status == "ADMINISTRATOR" %}
+                        <option value="{{user.status}}">
+                            {{user.status}}
+                        </option>
+                        <option value="SUPPORT AGENT">SUPPORT AGENT</option>
+                        <option value="USER">USER</option>
+
+                        {% elif user.status == "SUPPORT AGENT" %}
+                        <option value="{{user.status}}">
+                            {{user.status}}
+                        </option>
+                        <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+                        <option value="USER">USER</option>
+                        
+                        {% elif user.status == "USER" %}
+                        <option value="{{user.status}}">
+                            {{user.status}}
+                        </option>
+                        <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+                        <option value="SUPPORT AGENT">SUPPORT AGENT</option>
+
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="text-center ">
+                    <a type="button " class="btn btn-secondary rounded-pill " href="{% url 'admin_users' %} ">No</a>
+                    <input class="btn btn-success rounded-pill " type="submit" name="Yes" value="Update">
+                </div>
+
+            </div>
+            {% elif user.status == "SUPPORT AGENT" %}
+            <div>
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{user.id}}">
+                <div class="mb-3">
+                    <label for="first-name" class="form-label ">First Name</label>
+                    <input type="text" name="first_name" class=" form-control " value="{{user.first_name}}">
+                </div>
+                <div class="mb-3 ">
+                    <label for="last-name" class="form-label ">Last Name</label>
+                    <input type="text" name="last_name" class=" form-control " value="{{user.last_name}}">
+                </div>
+                <div class="mb-3 ">
+                    <label for="username" class="form-label ">Username</label>
+                    <input type="text" name="username" class=" form-control " value="{{user.username}}">
+                </div>
+
+                <input type="hidden" name="password" class=" form-control " value="{{user.password}}">
+
+                <div class="mb-3 ">
+                    <label for="email" class="form-label ">Email</label>
+                    <input type="email" name="email" class=" form-control " value="{{user.email}} ">
+                </div>
+
+                <div class="mb-3 ">
+                    <label for="email" class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        {% if user.status == "ADMINISTRATOR" %}
+                        <option value="{{user.status}}">
+                            {{user.status}}
+                        </option>
+                        <option value="SUPPORT AGENT">SUPPORT AGENT</option>
+                        <option value="USER">USER</option>
+
+                        {% elif user.status == "SUPPORT AGENT" %}
+                        <option value="{{user.status}}">
+                            {{user.status}}
+                        </option>
+                        <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+                        <option value="USER">USER</option>
+                        
+                        {% elif user.status == "USER" %}
+                        <option value="{{user.status}}">
+                            {{user.status}}
+                        </option>
+                        <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+                        <option value="SUPPORT AGENT">SUPPORT AGENT</option>
+
+                        {% endif %}
+                    </select>
+                </div>
+
+                <div class="mb-3 ">
+                    <label for="department" class=" form-label ">Department </label>
+                    <select name="department" class="form-select " equired>
+                                  {% for agent in agent %} {% for dep in dep %}{% if agent.user_id == user.id %}{% if agent.department_id == dep.id %}
+                                    <option value="{{dep.id}}">{{dep.department_name}}</option>
+                                    {% endif %} {% endif %} 
+                                    <option value="{{dep.id}} ">{{dep.department_name}}</option> 
+                                    {% endfor %}{% endfor %}
+                                </select>
+                </div>
+                <div class="mb-3 ">
+                    <label for="category" class="form-label ">Category </label>
+                    <select name="category" class="form-select " required>
+                                 {% for agent in agent %} {% for cat in cat %}{% if agent.user_id == user.id %}{% if agent.category_id == cat.id %}
+                                    <option value="{{cat.id}}">{{cat.category_name}}</option>
+                                     {% endif %} {% endif %}
+                                    <option value="{{cat.id}} ">{{cat.category_name}}</option>
+                                     {% endfor %}{% endfor %}
+                                </select>
+                </div>
+                <div class="mb-3 ">
+                    {% for agent in agent %} {% if agent.user_id == user.id %}
+                    <label for="level" class="form-label ">Level</label>
+                    <input type="number" name="level" class="form-control " value="{{agent.level}}" required> {% endif %} {% endfor %}
+                </div>
+
+
+                <div class="text-center ">
+                    <a type="button " class="btn btn-secondary rounded-pill " href="{% url 'admin_users' %} ">No</a>
+                    <input class="btn btn-success rounded-pill " type="submit" name="Yes " value="Update ">
+                </div>
+
+            </div>
+            {% elif user.status == "USER" %}
+            <div>
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{user.id}}">
+                <div class="mb-3">
+                    <label for="first-name" class="form-label ">First Name</label>
+                    <input type="text" name="first_name" class=" form-control " value="{{user.first_name}}">
+                </div>
+                <div class="mb-3 ">
+                    <label for="last-name" class="form-label ">Last Name</label>
+                    <input type="text" name="last_name" class=" form-control " value="{{user.last_name}}">
+                </div>
+                <div class="mb-3 ">
+                    <label for="username" class="form-label ">Username</label>
+                    <input type="text" name="username" class=" form-control " value="{{user.username}}">
+                </div>
+
+                <input type="hidden" name="password" class=" form-control " value="{{user.password}} ">
+
+                <div class="mb-3 ">
+                    <label for="email" class="form-label ">Email</label>
+                    <input type="email" name="email" class=" form-control " value="{{user.email}} ">
+                </div>
+                <div class="mb-3 ">
+                    <label for="email" class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        {% if user.status == "ADMINISTRATOR" %}
+                        <option value="{{user.status}}">
+                            {{user.status}}
+                        </option>
+                        <option value="SUPPORT AGENT">SUPPORT AGENT</option>
+                        <option value="USER">USER</option>
+
+                        {% elif user.status == "SUPPORT AGENT" %}
+                        <option value="{{user.status}}">
+                            {{user.status}}
+                        </option>
+                        <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+                        <option value="USER">USER</option>
+                        
+                        {% elif user.status == "USER" %}
+                        <option value="{{user.status}}">
+                            {{user.status}}
+                        </option>
+                        <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+                        <option value="SUPPORT AGENT">SUPPORT AGENT</option>
+
+                        {% endif %}
+                    </select>
+                </div>
+
+                <div class="text-center ">
+                    <a type="button " class="btn btn-secondary rounded-pill " href="{% url 'admin_users' %} ">No</a>
+                    <input class="btn btn-success rounded-pill " type="submit" name="Yes " value="Update ">
+                </div>
+
+            </div>{% endif %}
+
+        </form>
+    </div>
+</body>
+
+</html>
