@@ -469,7 +469,7 @@ def create_ticket(request):
 
         #[{'text': 'help me', 'external_id': None, 'error': False, 'classifications': [{'tag_name': 'Not Urgent', 'tag_id': 77712469, 'confidence': 1.0}]}]
         
-       
+        #test commit 1. commit this changes, stage all changes
         #print(result.body)
         return HttpResponse(result.body[0]['classifications'][0]['tag_name'])
     else:
