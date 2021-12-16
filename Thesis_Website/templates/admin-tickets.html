@@ -111,22 +111,83 @@
         <div class="col-xxl-4 col-12">
             <div class="card info-card sales-card overflow-auto">
                 <div class="col-sm-12 row shadow">
-                    <div class="col-sm-7 row">
-                        <div class="col-sm-5">
-                            <select name="select-ts" onchange="tsFilterForm.submit()" class="form-select m-3 mb-2 p-1 text-info">
-                                <option value="">All Ticket <span class="small text-danger fw-bold">({{tickets_count}} total)</span></option>
+                    <div class="col-7 row">
+                        <div class="col-7">
+                        <form  method="GET" id="searchForm" data-tickets-url="{% url 'admin_search_tickets' %}">
+                            <select id="id_ts" name="search_ts" class="ticket_status m-3"  >
+                                <option value="0">All Tickets</option>
                                 {% for ts in ts %}
-                                    <option value="{{ts.id}}">{{ts.ticket_status_name}}</option>
+                                <option value="{{ts.id}}">{{ts.ticket_status_name}}</option>
                                 {% endfor %}
-                                </form>
-                                </select>
+                            </select>
+                          </form>
                         </div>
                     </div>
-                    <div class="col-sm-5">
-                        <input class="form-control m-3 mb-2 p-1" id="myInput" type="text" placeholder="Search.. ">
+                    <div class="col-5">
+                    <form  method="GET" id="searchForm2" data-tickets-url="{% url 'admin_search_ticket_id' %}">
+                        <div class="row">
+                            <div class="col-8">
+                                <input id="search_ticket_id" name="search_ticket_id" class="form-control m-3 mb-2 p-1" id="myInput" type="number" placeholder="Search Ticket ID ">
+                            </div>
+                            <div class="col-2">
+                                <button type="button" class="btn btn-secondary m-3 mb-2">Search</button>
+                            </div>
+                        </div>
+                    </form>
                     </div>
                 </div>
-                <br> {% for ticket in ticket %}{% if request.user.department == ticket.department %}
+                <br> 
+                <div id="ticket_body" class="card mb-2">
+                {% for ticket in ticket %}{% if not request.user.is_superuser %}{% if request.user.department == ticket.department %}{% if request.user.department == ticket.department %}
+                <div class="card mb-2 ">
+                    <a type="button" href="{% url 'view_ticket' ticket.id %}" class="text-dark"></a>
+                    <div class="col-md-12 shadow mb-0 small  ">
+                        <div class="row">
+                            <div class="col-md-1 d-flex justify-content-center align-items-center" style="background-color: {{ticket.status.ticket_status_color}};">
+                                <div class=""> {% if ticket.creator.profile_pic %}
+                                    <img src="{{ ticket.creator.profile_pic.url }}" alt="Profile" class="rounded-circle" width="45" height="45"> {% else %}
+                                    <img src="{% static 'images/avatar.svg' %}" alt="Profile" class="rounded-circle" width="45" height="45"> {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-8 mt-3 mb-3 p-3">
+                                <span class="small"> <i class="bi bi-person"> </i> {{ticket.creator.first_name}}&nbsp;{{ticket.creator.last_name}} </span><br>
+                                <span><i class="bi bi-card-heading"></i><b> {{ticket.subject}}&nbsp;<i class="text-danger"></b>#{{ticket.id}}</i></span><br>{% for at in at %} {% if at.ticket_id == ticket.id %}
+                                <span><i class="bi bi-headset small text-secondary"> {{at.agent.first_name}}&nbsp;{{at.agent.last_name}}</i> <br> {% endif %} {% endfor %} 
+
+                                <span><i class="bi bi-card-text small"> {{ticket.status}}</i> </span>
+                                <span class="float-end "> <i class="bi bi-calendar"> {{ticket.created_date}} </i> </span>
+                            </div>
+
+                            <div class="col-md-3 bg-light p-3 ">
+                                <br>
+                                <span><i class="bi bi-building "></i> {{ticket.department}}</span><br>
+                                <span><i class="bi bi-sort-up "></i> {{ticket.category}}</span><br>
+                                {% if ticket.sub_category %}
+                                <span><i class="bi bi-sort-down "></i> {{ticket.sub_category}}</span><br> 
+                                {% endif %}
+                                {% if ticket.priority %} 
+
+                                    {% if ticket.priority == 3 %}
+                                    <span><i class="bi bi-flag "></i> High</span><br>
+                                    
+
+                                    {% elif ticket.priority == 2 %}
+                                    <span><i class="bi bi-flag "></i> Normall</span><br>
+                                    
+
+                                    {% elif ticket.priority == 1 %}
+                                    <span><i class="bi bi-flag "></i> Low</span><br>
+
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+
+                {% endif %}{% endif %}{% elif request.user.is_superuser %}
+                
                 <div class="card mb-2 ">
                     <a type="button" href="{% url 'view_ticket' ticket.id %}" class="text-dark"></a>
                     <div class="col-md-12 shadow mb-0 small  ">
@@ -158,7 +219,9 @@
                     </a>
                 </div>
 
-                {% endif %}{% endfor %}
+               {% endif %}
+                {% endfor %}
+            </div>
             </div>
         </div>
 
@@ -166,6 +229,51 @@
     <!-- End #main -->
 
     {% include 'logout.html' %} {% include 'admin-footer.html' %}
+
+     <script src="https://code.jquery.com/jquery-3.3.1.min.js "></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js "></script>
+    <script>
+        $("#id_ts").change(function() {
+            const url = $("#searchForm").attr("data-tickets-url"); // get the url of the `agent_mytickets` view
+            const ts_id = $(this).val(); // get the selected ID from the HTML input
+
+            $.ajax({ // initialize an AJAX request
+                url: url, // set the url of the request
+                data: {
+                    'ticket_status_id': ts_id // add the department id to the GET parameters
+                },
+                success: function(data) { // `data` is the return of the `search_ts` view function
+                    $("#ticket_body").html(data); // replace the contents of the category input with the data that came from the server 
+                    
+
+                }
+                
+            });
+
+        });
+    </script>
+
+    <script>
+        $("#search_ticket_id").change(function() {
+            const url = $("#searchForm2").attr("data-tickets-url"); // get the url of the `agent_mytickets` view
+            const search_ticket_id = $(this).val(); // get the selected ID from the HTML input
+
+            $.ajax({ // initialize an AJAX request
+                url: url, // set the url of the request
+                data: {
+                    'search_ticket_id': search_ticket_id // add the department id to the GET parameters
+                },
+                success: function(data) { // `data` is the return of the `search_ts` view function
+                    $("#ticket_body").html(data); // replace the contents of the category input with the data that came from the server 
+                    
+
+                }
+                
+            });
+
+        });
+    </script>
+    
 
 
 

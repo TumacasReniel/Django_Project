@@ -72,14 +72,7 @@
             </nav>
         </div>
         <!-- End Page Title -->
-        <div class="card p-2 mb-3">
-
-            <div class="col-md-2 bg-info ">
-                <select name="" class="form-select p-1">
-                    <option value="">Sort By</option>
-                </select>
-            </div>
-        </div>
+       
 
         <div class="row">
 
@@ -88,7 +81,13 @@
                     <div class="card-header">
                         <h5 class="card-title">Total Created Tickets</h5>
                         <p>
-                            <h3 class="card-title">{{total_ticket_count}}</h3>
+                            <h3 class="card-title">
+                            {% if  total_ticket_count  %}
+                            {{total_ticket_count}}
+                            {% elif total_ticket_count is None  %}
+                            0
+                            {% endif %}
+                            </h3>
                         </p>
                     </div>
                     <div class="card-body bg-warning">

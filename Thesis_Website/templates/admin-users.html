@@ -87,7 +87,7 @@
     <main id="main" class="main overflow-auto">
 
         <div class="pagetitle">
-            <h1 class="text-success">Users in <span class="text-danger">{{request.user.department.department_name}}</span></h1>
+            <h1 class="text-success">Users/<span class="text-danger">{{request.user.department.department_name}}</span></h1>
         </div>
         <!-- End Page Title -->
 
@@ -96,21 +96,24 @@
             <div class="card m-3 overflow-auto">
                 <div class="row">
                     <div class="col-4">
-                        {% if request.user.is_superuser %}
-                        <select name="select-search-user-status" class="form-select m-3 ">
-                            <option value=" ">All Users ({{users_count}} total)</option>
-                            <option value=" ">ADMINISTRATOR</option>
-                            <option value=" ">SUPPORT AGENT</option>
-                            <option value=" ">USER</option>
-                        </select> {% else %}
+                        <form  method="GET" id="searchUserForm" data-users-url="{% url 'admin_search_user_type' %}">
+                            {% if request.user.is_superuser %}
+                            <select id="select_user_type" name="select-search-user-status" class="form-select m-3 ">
+                                <option value="">All Users ({{all_users_count}} total)</option>
+                                <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+                                <option value="SUPPORT AGENT">SUPPORT AGENT</option>
+                                <option value="USER">USER</option>
+                            </select> {% else %}
 
-                        <select name="select-search-user-status" class="form-select m-3 ">
-                            <option value=" ">All Users ({{user_count}} total)</option>
-                            <option value=" ">ADMINISTRATOR</option>
-                            <option value=" ">SUPPORT AGENT</option>
-                            <option value=" ">USER</option>
-                        </select> {% endif %}
+                            <select id="select_user_type" name="select-search-user-status" class="form-select m-3 ">
+                                <option value="">All Users ({{user_count}} total)</option>
+                                <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+                                <option value="SUPPORT AGENT">SUPPORT AGENT</option>
+                                <option value="USER">USER</option>
+                            </select> {% endif %}
+                        </form>
                     </div>
+
 
                     <div class="col-8">
                         <button data-bs-toggle="modal" data-bs-target="#select-role" class="btn btn-success rounded-pill add-users-btn float-end m-3 ">
@@ -133,7 +136,7 @@
                             <th class="text-center ">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="users_table">
                         {% if not request.user.is_superuser %} {% for u in users %}{% if request.user.department == u.department %}
                         <tr>
                             <!-- <td>{{u.id}}</td> -->
@@ -389,9 +392,16 @@
                                     <label for="category" class="form-label ">Category </label>
                                     <select name="category" id="id_cat" class="form-select " required>
                                         <option value="">Select</option>
-                                        {% for category in cat %}{% if category.department == request.user.department %}
-                                        <option value="{{category.id}}">{{ category.category_name }}</option>
-                                        {% endif %}{% endfor %}
+                                        {% for category in cat %}
+                                            {% if not request.user.is_superuser %}
+                                                {% if category.department == request.user.department %}
+                                                <option value="{{category.id}}">{{ category.category_name }}</option>
+                                                {% endif %}
+                                            {% elif request.user.is_superuser %}
+                                                
+
+                                            {% endif %}
+                                        {% endfor %}
                                     </select>
                                 </div>
                                 <input type="hidden" name="level" value="1 ">
@@ -542,7 +552,7 @@
 
         <script src="https://code.jquery.com/jquery-3.3.1.min.js "></script>
         <script>
-            $("#id_department").change(function() {
+            $("#id_dep").change(function() {
                 const url = $("#userForm").attr("data-categories-url"); // get the url of the `load_cities` view
                 const departmentId = $(this).val(); // get the selected department ID from the HTML input
 
@@ -552,13 +562,35 @@
                         'department_id': departmentId // add the department id to the GET parameters
                     },
                     success: function(data) { // `data` is the return of the `load_cities` view function
-                        $("#id_category").html(data); // replace the contents of the category input with the data that came from the server
+                        $("#id_cat").html(data); // replace the contents of the category input with the data that came from the server
 
                     }
                 });
 
             });
         </script>
+        <script>
+        $("#select_user_type").change(function() {
+            const url = $("#searchUserForm").attr("data-users-url"); // get the url of the `agent_mytickets` view
+            const ut_id = $(this).val(); // get the selected ID from the HTML input
+
+            $.ajax({ // initialize an AJAX request
+                url: url, // set the url of the request
+                data: {
+                    'user_type_id': ut_id // add the department id to the GET parameters
+                },
+                success: function(data) { // `data` is the return of the `search_ts` view function
+                    $("#users_table").html(data); // replace the contents of the category input with the data that came from the server 
+                    
+
+                }
+                
+            });
+
+        });
+    </script>
+
+        
 
 </body>
 

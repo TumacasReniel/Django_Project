@@ -13,6 +13,7 @@ from django.shortcuts import redirect, render
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
+from Thesis_Website.settings import TIME_ZONE
 
 from accounts.models import agent_od
 from notifications.models import Notification
@@ -21,7 +22,11 @@ from .models import *
 from .forms import *
 
 from monkeylearn import MonkeyLearn
+#from django.utils import timezone
+#import pytz
 
+#timezone.activate(pytz.timezone("Asia/Manila"))
+#tz = timezone.localtime(timezone.now())
 
 
 # Create your views here.
@@ -79,6 +84,26 @@ def admin_tickets(request):
     }
     return render(request,'admin-tickets.html',context)
 
+def admin_search_tickets(request):
+    search_ts = request.GET.get('ticket_status_id')
+    
+    search_result = tickets.objects.filter(status=search_ts).all().order_by('id')
+    if search_ts == "0":
+        search_result = tickets.objects.all()
+        
+    return render(request, 'admin-search-tickets.html', {'ticket': search_result})
+
+def admin_search_ticket_id(request):
+    search_ticket_id = request.GET.get('search_ticket_id') 
+    
+    print( search_ticket_id)
+    if search_ticket_id:
+        search_result = tickets.objects.filter(id= search_ticket_id).all().order_by('id')
+    elif search_ticket_id == '' or  search_ticket_id is None:
+        search_result = tickets.objects.all().order_by('id')
+        
+    return render(request, 'admin-search-ticket-id.html', {'ticket': search_result})
+
 def admin_ticket_statuses(request): 
     ts = ticket_statuses.objects.all()
     ts_count = ts.count()
@@ -88,7 +113,7 @@ def add_ticket_status(request):
     if request.method == 'POST':
         ts = ticket_statuses()
         ts.ticket_status_name = request.POST['ticket_status_name']
-        ts.ticket_status_color = request.POST['ticket_status_color']
+        ts.ticket_status_color = request.POST.get('ticket_status_color')
 
         if ticket_statuses.objects.filter(ticket_status_name= ts.ticket_status_name).exists():
             return redirect('admin_ticket_statuses')
@@ -97,8 +122,8 @@ def add_ticket_status(request):
         else:
             ts.save()
             return redirect('admin_ticket_statuses')
-    else:
-        return render(request,'admin-ticket-statuses.html')
+    
+    return render(request,'admin-ticket-statuses.html')
 
 
 def admin_delete_ticket_status(request):
@@ -113,14 +138,17 @@ def admin_update_ticket_status(request):
     if request.method == 'POST':
         ts = ticket_statuses.objects.get(id=request.POST['id'])
         ts.ticket_status_name = request.POST['ticket_status_name']
-        ts.ticket_status_color = request.POST['ticket_status_color']
+        ts.ticket_status_color = request.POST.get('ts_color')
+        
+        print(ts.ticket_status_name)
+        print(ts.ticket_status_color)
 
-        if ticket_statuses.objects.filter(ticket_status_name=ts.ticket_status_name).exists():
-            print("same name")
-            return redirect('admin_ticket_statuses')
-        else:
-            ticket_statuses.objects.filter(id=ts.id).update(ticket_status_name=ts.ticket_status_name,ticket_status_color=ts.ticket_status_color)
-            return redirect('admin_ticket_statuses')
+        #if ticket_statuses.objects.filter(ticket_status_name=ts.ticket_status_name).exists():
+        #    print("same name")
+        #    return redirect('admin_ticket_statuses')
+        #else:
+        #    ticket_statuses.objects.filter(id=ts.id).update(ticket_status_name=ts.ticket_status_name,ticket_status_color=ts.ticket_status_color)
+        #    return redirect('admin_ticket_statuses')
     else:
         print("di post")
 
@@ -279,24 +307,42 @@ def admin_users(request):
         "all_users":all_users,
         "users":users,"cat":cat,
         "dep":dep,"agent":agent,
-        "user_count":user_count
+        "user_count":user_count,
+        "cat" :cat
+        
     }
     user_count = User.objects.filter(department=request.user.department).count()
     return render(request,'admin-users.html', context)
+
+
+def admin_search_user_type(request):
+    User = get_user_model()
+    user_type = request.GET.get('user_type_id') 
+    
+    print(user_type)
+    if user_type:
+        search_result = User.objects.filter(status=user_type).all().order_by('id')
+    elif user_type == '' or  user_type is None:
+        search_result = User.objects.all().order_by('id')
+
+    print(search_result)
+    return render(request, 'admin-search-select-user-type.html', {'all_users': search_result})
 
 def admin_priorities(request):
     return render(request,'admin-priorities.html')
 
 
 def admin_profile(request):
+    dep = departments.objects.all()
     noti_count = None
     if request.user.is_authenticated:
         noti_count =  Notification.objects.filter(user=request.user,is_seen=False).count()
 
     context ={
         "noti_count":noti_count,
+        "dep":dep
     }
-    return render(request,'admin-profile.html')
+    return render(request,'admin-profile.html',context)
 
 
 def agent_dashboard_one(request):
@@ -342,9 +388,11 @@ def agent_mytickets(request):
     dep = departments.objects.all()
     cat = categories.objects.all()
     subc = sub_categories.objects.all()
-    ticket = tickets.objects.all()
+    ts = ticket_statuses.objects.all()
     reply = replies.objects.all()
     at = accepted_tickets.objects.all()
+    
+    ticket = tickets.objects.filter(creator=request.user).all().order_by('id')
 
     noti_count = None
     if request.user.is_authenticated:
@@ -356,10 +404,12 @@ def agent_mytickets(request):
         "cat":cat, 
         "subc":subc, 
         "ticket":ticket,
+        "ts":ts,
         "reply":reply,
         "at":at
     }
     return render(request,'agent-mytickets.html',context)
+
 
 def agent_accepted_tickets(request):
     dep = departments.objects.all()
@@ -458,20 +508,55 @@ def create_ticket(request):
 
         ticket.subject = request.POST['subject']
         ticket.description = request.POST['description']
-        #ticket.save()
-
-        #return redirect('agent_mytickets')
-        ml = MonkeyLearn('94973664dd807eb954224b000700a16b0136467d')
-        data = ["It was good to use"]
-        model_id = 'cl_Aiu8dfYF'
-        result  = ml.classifiers.classify(model_id, data)
-        #print(result[0].external_id)
-
-        #[{'text': 'help me', 'external_id': None, 'error': False, 'classifications': [{'tag_name': 'Not Urgent', 'tag_id': 77712469, 'confidence': 1.0}]}]
         
-        #test commit 1. commit this changes, stage all changes
-        #print(result.body)
-        return HttpResponse(result.body[0]['classifications'][0]['tag_name'])
+        text = ticket.description
+
+        ml = MonkeyLearn('94973664dd807eb954224b000700a16b0136467d')
+        data = [text]
+        model_id1 = 'cl_pi3C7JiL'    #Sentiment Analysis(NLP Model of Monkey Learn) - API
+        model_id2 = 'cl_Aiu8dfYF'    #Urgency Detection(NLP Model of Monkey Learn) - API
+        result1  = ml.classifiers.classify(model_id1, data)
+        result2  = ml.classifiers.classify(model_id2, data)
+        
+        #test commit 1. commit this changes, stage all changes, enter commit msg, click commit oks nthen click push, andun na ung commit
+        
+        res_sa = result1.body[0]['classifications'][0]['tag_name']
+        res_ud = result2.body[0]['classifications'][0]['tag_name'] 
+        
+       
+        if res_sa == "Neutral" and res_ud == "Urgent":
+            #set Priority to level 3(High)
+            ticket.priority = 3
+            ticket.save()
+ 
+        elif res_sa == "Neutral" and res_ud == "Not Urgent":
+            #set Priority to level 1(Low)
+            ticket.priority = 1
+            ticket.save()
+ 
+        elif res_sa == "Negative" and res_ud == "Urgent":
+            #set Priority to level 3(High)
+            ticket.priority = 3
+            ticket.save()
+            
+        elif res_sa == "Negative" and res_ud == "Not Urgent":
+            #set Priority to level 2(Medium)
+            ticket.priority = 2
+            ticket.save()
+            
+        elif res_sa == "Positive" and res_ud == "Urgent":
+            #set Priority to level 3(High)
+            ticket.priority = 3
+            ticket.save()
+
+        elif res_sa == "Positive" and res_ud == "Not Urgent":
+            #set Priority to level 1(Low)
+            ticket.priority = 1
+            ticket.save()
+           
+            
+        return redirect('agent_mytickets')
+        
     else:
         print("di post")
     return render(request,'agent-mytickets.html')
@@ -493,7 +578,6 @@ def accept_ticket(request):
         noti.user = at.ticket.creator
         noti.notification_type=1
         noti.text_preview = "Agent accepted your ticket"
-
 
         current_site = get_current_site(request)
 
@@ -526,6 +610,31 @@ def agent_delete_ticket(request):
         return redirect("agent_mytickets")
         
     return render(request,'agent-mytickets.html')
+
+def agent_search_tickets(request):
+    search_ts = request.GET.get('ticket_status_id') 
+    if search_ts:
+        if search_ts == "High":
+            search_result = tickets.objects.filter(creator=request.user,priority=3).all().order_by('id')
+        elif search_ts == "Normal":
+            search_result = tickets.objects.filter(creator=request.user,priority=2).all().order_by('id')
+        elif search_ts == "Low":
+            search_result = tickets.objects.filter(creator=request.user,priority=1).all().order_by('id')
+        else:
+            search_result = tickets.objects.filter(creator=request.user,status=search_ts).all().order_by('id')
+    else:
+        search_result = tickets.objects.filter(creator=request.user).all()
+    return render(request, 'agent-search-tickets.html', {'ticket': search_result})
+    # return JsonResponse(list(category.values('id', 'name')), safe=False)
+
+def agent_search_ticket_id(request):
+    search_ts = request.GET.get('ticket_id') 
+    print(search_ts)
+    if search_ts:
+        search_result = tickets.objects.filter(creator=request.user,id=search_ts).all().order_by('id')
+    else:
+        search_result = tickets.objects.filter(creator=request.user).all()
+    return render(request, 'agent-search-ticket-id.html', {'ticket': search_result})
 
 def agent_add_reply_on_accepted_ticket(request):
     if request.method == 'POST':
@@ -636,7 +745,8 @@ def ajax_load_sub_categories(request):
 
 def agent_profile(request):  
     agent = agent_od.objects.all()
-    return render(request,'agent-profile.html',{"agent":agent})
+    dep = departments.objects.all()
+    return render(request,'agent-profile.html',{"agent":agent, "dep":dep})
 
 def agent_view_ticket(request):
     noti_count = None
@@ -651,7 +761,9 @@ def agent_tag_tickets(request):
     dep = departments.objects.all()
     cat = categories.objects.all()
     subc = sub_categories.objects.all()
-    ticket = tickets.objects.all()
+    ticket = tickets.objects.all().order_by('priority')
+    ts = ticket_statuses.objects.all()
+    tickets_count = ticket.filter(department=request.user.department,status=1).count()
        
     noti_count = None
     if request.user.is_authenticated:
@@ -660,9 +772,13 @@ def agent_tag_tickets(request):
     context={
         "noti_count" : noti_count,
         "dep":dep,"cat":cat, "subc":subc,"ticket":ticket,
-        "agent":agent
+        "agent":agent,
+        "tickets_count":tickets_count,
+        "ts":ts
     }
     return render(request,'agent-tag-tickets.html',context)
+
+
 
 def agent_invite_agent(request):
     if request.method == "POST":
@@ -676,13 +792,53 @@ def agent_invite_agent(request):
     
     return render(request,'agent-tag-tickets.html')
 
+def agent_mark_as_resolved_ticket(request):
+    if request.method == "POST":
+        User = get_user_model()
+        agent = request.POST.get('agent')
+        ticket = tickets.objects.get(id=request.POST['id'])
+        pk =ticket.id
+        print(pk)
+        tickets.objects.filter(id=pk).update(status=3)
+        
+        noti = Notification()
+        noti.ticket = ticket
+        noti.sender = ticket.agent
+        noti.user = ticket.creator
+        noti.notification_type=2
+        noti.text_preview = 'Agent mark ticket as Resolved'
+        noti.save()
+        
+        current_site = get_current_site(request)
+        # load a template like get_template() 
+        # and calls its render() method immediately.
+        email_body = render_to_string('agent-mark-ticket-as-resolved.html',{"sender":noti.sender,"ticket":noti.ticket,"domain": current_site.domain, })
+        email_subject ='User replied to his/her ticket'
+        
+        email = EmailMessage(
+            email_subject,  
+            email_body,
+            settings.EMAIL_HOST_USER,
+            [noti.ticket.agent.email],
+        ) 
+
+        email.fail_silently=False
+        email.send()
+        
+        return redirect('agent_view_accepted_ticket', pk=pk)
+    
+
+    return render(request,'agent-view-accepted-tickets.html')
+
 def user_profile(request):
+    dep = departments.objects.all()
     noti_count = None
     if request.user.is_authenticated:
         noti_count =  Notification.objects.filter(user=request.user,is_seen=False).count()
 
     context = {
-        "noti_count":noti_count
+        "noti_count":noti_count,
+        "dep":dep
     }
     return render(request,'user-profile.html',context)
 
@@ -717,6 +873,7 @@ def user_mytickets(request):
     cat = categories.objects.all()
     subc = sub_categories.objects.all()
     ticket = tickets.objects.all()
+    ts = ticket_statuses.objects.all()
 
     noti_count = None
     if request.user.is_authenticated:
@@ -728,7 +885,8 @@ def user_mytickets(request):
         "cat":cat, 
         "subc":subc,
         "ticket":ticket,
-        "noti_count":noti_count
+        "noti_count":noti_count,
+        "ts":ts
     }
     
     return render(request,'user-mytickets.html',context)
@@ -786,7 +944,51 @@ def user_create_ticket(request):
 
         ticket.subject = request.POST['subject']
         ticket.description = request.POST['description']
-        ticket.save()
+        
+        text = ticket.description
+
+        ml = MonkeyLearn('94973664dd807eb954224b000700a16b0136467d')
+        data = [text]
+        model_id1 = 'cl_pi3C7JiL'    #Sentiment Analysis(NLP Model of Monkey Learn) - API
+        model_id2 = 'cl_Aiu8dfYF'    #Urgency Detection(NLP Model of Monkey Learn) - API
+        result1  = ml.classifiers.classify(model_id1, data)
+        result2  = ml.classifiers.classify(model_id2, data)
+        
+        #test commit 1. commit this changes, stage all changes, enter commit msg, click commit oks nthen click push, andun na ung commit
+        
+        res_sa = result1.body[0]['classifications'][0]['tag_name']
+        res_ud = result2.body[0]['classifications'][0]['tag_name'] 
+        
+       
+        if res_sa == "Neutral" and res_ud == "Urgent":
+            #set Priority to level 3(High)
+            ticket.priority = 3
+            ticket.save()
+ 
+        elif res_sa == "Neutral" and res_ud == "Not Urgent":
+            #set Priority to level 1(Low)
+            ticket.priority = 1
+            ticket.save()
+ 
+        elif res_sa == "Negative" and res_ud == "Urgent":
+            #set Priority to level 3(High)
+            ticket.priority = 3
+            ticket.save()
+            
+        elif res_sa == "Negative" and res_ud == "Not Urgent":
+            #set Priority to level 2(Medium)
+            ticket.priority = 2
+            ticket.save()
+            
+        elif res_sa == "Positive" and res_ud == "Urgent":
+            #set Priority to level 3(High)
+            ticket.priority = 3
+            ticket.save()
+
+        elif res_sa == "Positive" and res_ud == "Not Urgent":
+            #set Priority to level 1(Low)
+            ticket.priority = 1
+            ticket.save()
 
         return redirect('user_mytickets')
     else:
@@ -825,6 +1027,15 @@ def user_add_reply(request):
         return redirect('user_view_myticket', pk=pk)
 
     return render(request,'user-view-mytickets.html')
+
+def user_search_tickets(request):
+    search_ts = request.GET.get('ticket_id') 
+    print(search_ts)
+    if search_ts:
+        search_result = tickets.objects.filter(creator=request.user,id=search_ts).all().order_by('id')
+    else:
+        search_result = tickets.objects.filter(creator=request.user).all()
+    return render(request, 'user-search-tickets.html', {'ticket': search_result})
 
 
     

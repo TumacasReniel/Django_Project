@@ -104,7 +104,22 @@
                         <span><i class="bi bi-building "></i> {{ticket.department}}</span><br>
                         <span><i class="bi bi-sort-up "></i> {{ticket.category}}</span><br>
                         <span><i class="bi bi-sort-down "></i> {{ticket.sub_category}}</span><br>
-                        <span><i class="bi bi-flag "></i> {{ticket.priority}}</span><br>
+                        {% if ticket.priority %} 
+
+                            {% if ticket.priority == 3 %}
+                            <span><i class="bi bi-flag "></i> High</span><br>
+                            
+
+                            {% elif ticket.priority == 2 %}
+                            <span><i class="bi bi-flag "></i> Normal</span><br>
+                            
+
+                            {% elif ticket.priority == 1 %}
+                            <span><i class="bi bi-flag "></i> Low</span><br>
+                            
+                            {% endif %}
+
+                        {% endif %}
                     </div>
                 </div>
             </div>

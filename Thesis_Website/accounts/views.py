@@ -26,6 +26,79 @@ from .tokens import account_activation_token
 # Create your views here.
 from .forms import *
 
+def forget_password(request):
+    return render(request,'forget-password.html')
+
+def forget_password_enter_new(request,uidb64, token):
+    User = get_user_model()
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+     # checking if the user exists, if the token is valid.
+    if user is not None and default_token_generator.check_token(user, token):
+        # if valid set active true 
+        if request.method == "POST":
+            password1 = request.POST['password1']
+            password2 = request.POST['password2']
+            
+            if password1 == password2:
+                user.password = None
+                user.set_password(password1)
+                user.save()
+                messages.success(request,"You password is changed successfully, you can now login using your new password. ")
+                return redirect('forget_password_success_changed')
+            else:
+                messages.success(request,"Password not matching")
+        return render(request,'forget-password-enter-new.html')
+        
+    else:
+        return render(request,'forget-password-enter-new.html')
+    
+
+def forget_password_success_changed(request):
+    return render(request,'forget-password-success-changed.html')
+
+def forget_password_send_mail(request):
+    User = get_user_model()
+    if request.method == "POST":
+        email = request.POST['email']
+        
+        current_site = get_current_site(request)
+        page_name = 'forget-password-enter-new'
+        mail_subject = 'FORGOT PASSWORD'
+        link = 'forget_password_enter_new'
+
+        
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+            
+            # load a template like get_template() 
+            # and calls its render() method immediately.
+            template = render_to_string('forgot-password-mail.html',{"link": current_site.domain , "page_name":page_name,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            # method will generate a hash value with user related data
+            'token': default_token_generator.make_token(user),})
+
+            email = EmailMessage(
+                mail_subject,  
+                template,
+                settings.EMAIL_HOST_USER,
+                [email],
+            )
+
+            email.fail_silently=False
+            email.send()
+
+            messages.success(request,"We've emailed you instructions for setting your password. You should receive the email shortly!")
+
+    context ={
+        
+    }
+    return render(request,'forget-password.html', context)
+
 def signup(request):
     User = get_user_model()
     dep = departments.objects.all()
@@ -322,5 +395,41 @@ def user_change_profile(request):
 
     return render(request, 'user-profile.html')
         
+def admin_update_profile_info(request):
+    if request.method == 'POST':
+        User = get_user_model()
+        user= User.objects.get(id=request.POST['id'])
+        form = adminForm(request.POST,instance=user)
+
+        if form.is_valid():
+            form.save()
+            return redirect('admin_profile')
+ 
+
+    return render(request, 'admin-profile.html')
+
+def agent_update_profile_info(request):
+    if request.method == 'POST':
+        User = get_user_model()
+        user= User.objects.get(id=request.POST['id'])
+        form = adminForm(request.POST,instance=user)
+
+        if form.is_valid():
+            form.save()
+            return redirect('agent_profile')
+
+    return render(request, 'agent-profile.html')
+
+def user_update_profile_info(request):
+    if request.method == 'POST':
+        User = get_user_model()
+        user= User.objects.get(id=request.POST['id'])
+        form = adminForm(request.POST,instance=user)
+
+        if form.is_valid():
+            form.save()
+            return redirect('user_profile')
+
+    return render(request, 'user-profile.html')
 
 

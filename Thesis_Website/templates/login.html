@@ -65,7 +65,7 @@
                     {% endfor %}
                 </div>
 
-                <a class="a" ref=" # ">Forgot Password?</a>
+                <a class="a" href="{% url 'forget_password' %}">Forgot Password?</a>
                 <input type="submit" class="login_btn" value="Login">
                 <a class="a" href="{% url 'signup' %}">No Account Yet?</a>
 

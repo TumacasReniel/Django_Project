@@ -1,0 +1,47 @@
+{% for ticket in ticket %}{% if ticket.creator_id == user.id %}
+                <a type="button" href="{% url 'user_view_myticket' ticket.id %}" class="text-dark">
+            <div class="card mb-2 ">
+                <div class="col-md-12 shadow mb-0 small ">
+                    <div class="row">
+                        <div class="col-md-1 p-3 card-icon  d-flex align-items-center justify-content-end" style="background-color: {{ticket.status.ticket_status_color}};">
+                            <h3 class="rounded-circle bg-light p-2"><i class="bi bi-file-earmark-text"></i></h3>
+                        </div>
+                        <div class="col-md-8 mt-3 mb-3 p-3">
+                            {% if ticket.agent %}
+                            <span><i class="bi bi-headset small text-secondary"> {{ticket.agent.first_name}}&nbsp;{{ticket.agent.last_name}}</i> <br> {% endif %}
+                            <span><i class="bi bi-card-heading"></i><b> {{ticket.subject}}&nbsp;<i class="text-danger"></b>#{{ticket.id}}</i></span><br>
+                            <span><i class="bi bi-card-text"> {{ticket.status}}</i> </span>
+                            <span class="float-end "> <i class="bi bi-calendar"> {{ticket.created_date}} </i> </span>
+                        </div>
+                        <div class="col-md-3 bg-light p-3 ">
+                            <span><i class="bi bi-building "></i> {{ticket.department}}</span><br>
+                            <span><i class="bi bi-sort-up "></i> {{ticket.category}}</span><br>{% if ticket.sub_category %}
+                            <span><i class="bi bi-sort-down "></i> {{ticket.sub_category}}</span><br> {% endif %}
+                            {% if ticket.priority %} 
+
+                                {% if ticket.priority == 3 %}
+                                <span><i class="bi bi-flag "></i> High</span><br>
+                                
+
+                                {% elif ticket.priority == 2 %}
+                                <span><i class="bi bi-flag "></i> Normal</span><br>
+                                
+
+                                {% elif ticket.priority == 1 %}
+                                <span><i class="bi bi-flag "></i> Low</span><br>
+
+                                {% endif %}
+                            {% endif %}<br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+        <div class="col-md-12 bg-white shadow mb-3 p-1 ">
+            {% if ticket.status.ticket_status_name == "Pending" %}
+            <div class=" ">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#delete-myticket{{ticket.id}}" class="btn p-0 "><i class="bi bi-trash text-danger small m-2 "></i><span class="small ">Delete</span></button>
+            </div>
+            {% endif %}
+        </div>
+        {% include 'user-delete-ticket-modal.html' %} {% endif %} {% endfor %}

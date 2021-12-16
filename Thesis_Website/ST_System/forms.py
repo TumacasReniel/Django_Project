@@ -47,6 +47,12 @@ class ticketForm(forms.ModelForm):
 			self.fields['sub_category'].queryset = sub_categories.objects.filter(category_id=category_id)
 		elif self.instance.pk:
 			self.fields['sub_category'].queryset = self.instance.category.sub_category_set
+   
+
+		
+    
+        
+      
 
 
 		

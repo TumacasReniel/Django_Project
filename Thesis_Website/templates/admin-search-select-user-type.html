@@ -1,0 +1,105 @@
+{% load static %}
+
+    {% if not request.user.is_superuser %} {% for u in all_users %}{% if request.user.department == u.department %}
+    <tr>
+        <!-- <td>{{u.id}}</td> -->
+        <td> {% if u.profile_pic %}
+            <img src="{{ u.profile_pic.url }}" alt="Profile" class="rounded-circle" width="35" height="35"> {% else %}{% if u.status == "ADMINISTRATOR" %}
+            <img src="{% static 'images/admin_avatar.svg' %} " alt="Profile " class="rounded-circle" width="35" height="35">{% elif u.status == "SUPPORT AGENT" %}<img src="{% static 'images/avatar.svg' %} " alt="Profile
+            " class="rounded-circle " width="35 " height="35 ">{% elif u.status == "USER" %}<img src="{% static 'images/avatar.svg' %} " alt="Profile " class="rounded-circle " width="35 " height="35 ">{% endif %}{% endif %}&nbsp;{{u.first_name}}&nbsp;{{u.last_name}}</td>
+        <td>{{u.username}}</td>
+        <td>{{u.email}}</td>
+        <td>{{u.department}}</td>
+        <td>{{u.status}}</td>
+        <td class="text-center ">
+            <div class="dropdown ">
+                <button class="btn btn-white fw-bold " id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false ">&mldr;</button>
+                <div class="dropdown-menu ">
+
+                    <!-- if status  equal to SUPPORT AGENT -->
+                    {% if u.status == "SUPPORT AGENT" %}
+
+                    <!-- viewmore dropdown-->
+                    <a class="dropdown-item" href="{% url 'admin_agent_view_more' u.id %} "><i class="bi bi-eye text-success "></i>View More</a>
+                    <!-- update dropdown-->
+                    <a class="dropdown-item " type="button" data-bs-toggle="modal" data-bs-target="#update-account{{u.id}}"><i class="bi bi-pencil-square text-success "></i>Edit Account</a>
+                    <!-- update assigned-->
+                    <a class="dropdown-item " type="button" data-bs-toggle="modal" data-bs-target="#update-agent-assigned{{u.id}}"><i class="bi bi-pencil-square text-success "></i>Edit Assignee</a>
+
+                    <!-- else if status  equal toADMINISTRATOR -->
+                    {% elif u.status == "ADMINISTRATOR" %}
+
+                    <!-- viewmore dropdown-->
+                    <a class="dropdown-item " href="{% url 'admin_admin_view_more' u.id %}"><i class="bi bi-eye text-success "></i>View More</a>
+                    <!-- update dropdown-->
+                    <a class="dropdown-item " type="button" data-bs-toggle="modal" data-bs-target="#update-account{{u.id}}"><i class="bi bi-pencil-square text-success "></i>Edit Account</a>
+
+                    <!-- if status  equal to USER -->
+                    {% elif u.status == "USER" %}
+
+                    <!-- viewmore dropdown-->
+                    <a class="dropdown-item" href="{% url 'admin_user_view_more' u.id %}"><i class="bi bi-eye text-success "></i>View More</a>
+                    <!-- update dropdown-->
+                    <a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#update-account{{u.id}} "><i class="bi bi-pencil-square text-success "></i>Edit Account</a>
+
+                    <!-- endif -->
+                    {% endif %}
+
+                    <!-- delete dropdown-->
+                    <a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#delete-account{{u.id}}"><i class="bi bi-trash text-danger "></i>Delete Account</a>
+                </div>
+            </div>
+        </td>
+    </tr>{% include 'admin-manage-users.html' %}{% endif %} {% endfor %}{% else %} {% for u in all_users %}
+    <tr>
+        <!-- <td>{{u.id}}</td> -->
+        <td> {% if u.profile_pic %}
+            <img src="{{u.profile_pic.url}}" alt="Profile" class="rounded-circle" width="35" height="35"> {% else %}{% if u.status == "ADMINISTRATOR" %}
+            <img src="{% static 'images/admin_avatar.svg' %} " alt="Profile " class="rounded-circle" width="35" height="35">{% elif u.status == "SUPPORT AGENT" %}<img src="{% static 'images/avatar.svg' %}" alt="Profile
+            " class="rounded-circle " width="35 " height="35 ">{% elif u.status == "USER" %}<img src="{% static 'images/avatar.svg' %} " alt="Profile " class="rounded-circle " width="35 " height="35 ">{% endif %}{% endif %}&nbsp;
+            {{u.first_name}}&nbsp;{{u.last_name}}
+        </td>
+        <td>{{u.username}}</td>
+        <td>{{u.email}}</td>
+        <td>{{u.department}}</td>
+        <td>{{u.status}}</td>
+        <td class="text-center ">
+            <div class="dropdown ">
+                <button class="btn btn-white fw-bold " id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false ">&mldr;</button>
+                <div class="dropdown-menu ">
+
+                    <!-- if status  equal to SUPPORT AGENT -->
+                    {% if u.status == "SUPPORT AGENT" %}
+
+                    <!-- viewmore dropdown-->
+                    <a class="dropdown-item" href="{% url 'admin_agent_view_more'  u.id %} "><i class="bi bi-eye text-success "></i>View More</a>
+                    <!-- update dropdown-->
+                    <a class="dropdown-item " type="button" data-bs-toggle="modal" data-bs-target="#update-account{{ u.id}}"><i class="bi bi-pencil-square text-success "></i>Edit Account</a>
+                    <!-- update assigned-->
+                    <a class="dropdown-item " type="button" data-bs-toggle="modal" data-bs-target="#update-agent-assigned{{ u.id}}"><i class="bi bi-pencil-square text-success "></i>Edit Assignee</a>
+
+                    <!-- else if status  equal toADMINISTRATOR -->
+                    {% elif u.status == "ADMINISTRATOR" %}
+
+                    <!-- viewmore dropdown-->
+                    <a class="dropdown-item " href="{% url 'admin_admin_view_more'  u.id %}"><i class="bi bi-eye text-success "></i>View More</a>
+                    <!-- update dropdown-->
+                    <a class="dropdown-item " type="button" data-bs-toggle="modal" data-bs-target="#update-account{{ u.id}}"><i class="bi bi-pencil-square text-success "></i>Edit Account</a>
+
+                    <!-- if status  equal to USER -->
+                    {% elif u.status == "USER" %}
+
+                    <!-- viewmore dropdown-->
+                    <a class="dropdown-item" href="{% url 'admin_user_view_more'  u.id %}"><i class="bi bi-eye text-success "></i>View More</a>
+                    <!-- update dropdown-->
+                    <a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#update-account{{ u.id}} "><i class="bi bi-pencil-square text-success "></i>Edit Account</a>
+
+                    <!-- endif -->
+                    {% endif %}
+
+                    <!-- delete dropdown-->
+                    <a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#delete-account{{ u.id}}"><i class="bi bi-trash text-danger "></i>Delete Account</a>
+                </div>
+            </div>
+        </td>
+    </tr>{% include 'admin-manage-users.html' %} {% endfor %}{% endif %}

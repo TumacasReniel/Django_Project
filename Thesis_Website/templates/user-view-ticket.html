@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Agent Dashboard </title>
+    <title>User View Ticket</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -72,7 +72,7 @@
         <!-- End Page Title -->
 
         <div class=" d-flex justify-content-end">
-            <a type="button" href="{% url 'agent_mytickets' %}" class="btn btn-success rounded-pill m-3 add-dep-btn ">
+            <a type="button" href="{% url 'user_mytickets' %}" class="btn btn-success rounded-pill m-3 add-dep-btn ">
                 <i class=" bi bi-back "></i> Return to My Tickets
             </a>
         </div>
@@ -96,7 +96,21 @@
                         <span><i class="bi bi-building "></i> {{ticket.department}}</span><br>
                         <span><i class="bi bi-sort-up "></i> {{ticket.category}}</span><br>
                         <span><i class="bi bi-sort-down "></i> {{ticket.sub_category}}</span><br>
-                        <span><i class="bi bi-flag "></i> {{ticket.priority}}</span><br>
+                        {% if ticket.priority %} 
+
+                            {% if ticket.priority == 3 %}
+                            <span><i class="bi bi-flag "></i> High</span><br>
+                            
+
+                            {% elif ticket.priority == 2 %}
+                            <span><i class="bi bi-flag "></i> Normal</span><br>
+                            
+
+                            {% elif ticket.priority == 1 %}
+                            <span><i class="bi bi-flag "></i> Low</span><br>
+
+                            {% endif %}
+                        {% endif %}<br>
                     </div>
                 </div>
             </div>
@@ -112,8 +126,9 @@
         <div class="col-md-12 shadow mb-1 small  border border-radius p-3 ">
             <input type="hidden" value="{{reply.id}}">
             <div class=" text-end ">
-                {% if reply.ticket.creator.id == reply.sender.id %}
-                <button class="btn p-0 " name="reply-btn" type="button" data-bs-toggle="modal" data-bs-target="#delete-reply{{reply.id}}"><i class="bi bi-trash text-danger btn p-0 "></i></button> {% endif %}
+                {% if reply.ticket.creator == reply.sender %}
+                <button class="btn p-0 " name="reply-btn" type="button" data-bs-toggle="modal" data-bs-target="#delete-reply{{reply.id}}"><i class="bi bi-trash text-danger btn p-0 "></i></button> 
+                {% endif %}
             </div>
             <div class="col-sm-11 mt-1 p-2 ">
                 {% if reply.sender.profile_pic %}
@@ -131,7 +146,7 @@
         {% include 'user-delete-reply-modal.html' %} {% endif %}{% endfor %}
 
         <div class="col-md-12 bg-light shadow mb-3 p-1 accordion-collapse collapse " id="reply_box">
-            <form action="{% url 'add_reply' %}" method="POST" enctype="multipart/form-data">
+            <form action="{% url 'user_add_reply' %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 <div class="row ">

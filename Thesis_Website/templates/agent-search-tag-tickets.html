@@ -1,0 +1,53 @@
+{% load static %}
+{% for ticket in ticket %}{% if agent.user.department == ticket.department %}{% if agent.category == ticket.category %}{% if ticket.status.ticket_status_name == "Pending" %}{% if user.id != ticket.creator.id %}
+        <div class="card m-2">
+            <a type="button" data-bs-toggle="collapse" data-bs-target="#description_box{{ticket.id}}">
+                <div class="col-md-12 small text-dark">
+                    <div class="row">
+                        <div class="col-sm-1" style="background-color: {{ticket.status.ticket_status_color}};">
+                            <img src="{% static 'images/avatar.svg' %}" alt="Profile" class="rounded-circle prof_pic p-0">
+                        </div>
+                        <div class="col-sm-8 mt-3 mb-3">
+                            <span><i class="bi bi-card-heading"></i> {{ticket.subject}}&nbsp;<i class="text-danger">#{{ticket.id}}</i></span><br>
+                            <span><i class="bi bi-person"></i>{{ticket.creator.first_name}}&nbsp;{{ticket.creator.last_name}}<br>        
+                        <span><i class="bi bi-card-text"></i> {{ticket.status}}</span>
+                            <span class="float-end "> <i class="bi bi-calendar"></i> {{ticket.created_date}} </span>
+                        </div>
+                        <div class="col-sm-3 bg-light p-3">
+                            <span><i class="bi bi-building  "></i> {{ticket.department}}</span><br>
+                            <span><i class="bi bi-sort-up "></i> {{ticket.category}}</span><br> {% if ticket.sub_category %}
+                            <span><i class="bi bi-sort-down "></i> {{ticket.sub_category}}</span><br> {% endif %}
+                            {% if ticket.priority %} 
+
+                                {% if ticket.priority == 3 %}
+                                <span><i class="bi bi-flag "></i> High</span><br>
+                                
+
+                                {% elif ticket.priority == 2 %}
+                                <span><i class="bi bi-flag "></i> Normal</span><br>
+                                
+
+                                {% elif ticket.priority == 1 %}
+                                <span><i class="bi bi-flag "></i> Low</span><br>
+                                
+                                {% endif %}
+                                
+                            {% endif %}<br>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <div class="col-md-12 shadow  small p-3 overflow-auto border border-solid border-secondary accordion-collapse collapse " id="description_box{{ticket.id}}">
+                <span><i class=" bi bi-description ">Description:</i><br>
+                    <p class="m-3 text-indent ">{{ticket.description}}</p>
+                </span>
+            </div>
+            {% if ticket.status.ticket_status_name == "Pending" %}
+            <div class="col-md-12 shadow mt-2 p-1 ">
+                <div class=" ">
+                    <button class="btn p-0 bg-light m-1 bg-gradient " data-bs-toggle="modal" data-bs-target="#accept-ticket{{ticket.id}}"></i><span class="small">Accept<i class="bi bi-check text-success small m-2 "></i></span></button>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% include 'agent-delete-ticket-modal.html' %} {% endif %}{% endif %}{% endif %} {% endif %} {% endfor %}

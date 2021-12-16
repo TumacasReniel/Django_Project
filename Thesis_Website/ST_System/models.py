@@ -47,25 +47,38 @@ class sub_categories(models.Model):
         return self.sub_category_name
 
 class priorities(models.Model):
-    priority_name = models.CharField(max_length=50)
+    PL_CHOICES = [
+         ("1","Low"),
+        ("2","Medium"),
+        ("3","Higj"),
+    ]
+    priority_level = models.IntegerField(choices=PL_CHOICES,default=1)
 
     def __str__(self):
         return self.priority_name
 
 
 class tickets(models.Model):
+    #PL_CHOICES = [
+    #     ("1","Low"),
+    #    ("2","Medium"),
+    #    ("3","High"),
+    #]
+     
     User = get_user_model()
     creator = models.ForeignKey(User,on_delete=models.CASCADE, related_name='creator')
     agent = models.ForeignKey(User,on_delete=models.CASCADE, related_name='agent',blank=True,null=True)
     department = models.ForeignKey(departments,on_delete=models.CASCADE)
     category = models.ForeignKey(categories,on_delete=models.CASCADE)
     sub_category = models.ForeignKey(sub_categories,on_delete=models.CASCADE, blank=True, null=True)
-    subject = models.CharField( max_length=200,blank=True,null=True)
+    subject = models.CharField( max_length=200)
     description = models.CharField(max_length=255)
-    priority = models.ForeignKey(priorities,on_delete=models.CASCADE,blank=True,null=True)
+    priority = models.IntegerField(default=1)
     status =  models.ForeignKey(ticket_statuses,on_delete=models.CASCADE,blank=True,null=True)
     attach_file = models.FileField(blank=True,null=True)
     created_date = models.DateTimeField(auto_now_add=True)
+    
+    
 
 class replies(models.Model):
     User = get_user_model()

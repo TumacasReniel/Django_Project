@@ -69,7 +69,9 @@ urlpatterns = [
     path("admin_user_view_more/<int:pk>/",views.admin_user_view_more, name='admin_user_view_more'),
 
     #admin filter ticket
-    #path("admin_filter_ticket",views.admin_filter_ticket, name='admin_filter_ticket'),
+    path("admin_search_tickets",views.admin_search_tickets, name='admin_search_tickets'),
+    path("admin_search_ticket_id",views.admin_search_ticket_id, name='admin_search_ticket_id'),
+    path("admin_search_user_type",views.admin_search_user_type, name='admin_search_user_type'),
 
     
 
@@ -92,9 +94,15 @@ urlpatterns = [
 
     path("agent_tag_tickets",views.agent_tag_tickets, name='agent_tag_tickets'),
     path("agent_invite_agent",views.agent_invite_agent, name='agent_invite_agent'),
+    path("agent_search_tickets",views.agent_search_tickets, name='agent_search_tickets'),
+    path("agent_search_ticket_id",views.agent_search_ticket_id, name='agent_search_ticket_id'),
+    
+    path("agent_mark_as_resolved_ticket",views.agent_mark_as_resolved_ticket, name='agent_mark_as_resolved_ticket'),
+   
 
     path('ajax_load_categories', views.ajax_load_categories, name='ajax_load_categories'), # AJAX
     path('ajax_load_sub_categories', views.ajax_load_sub_categories, name='ajax_load_sub_categories'), # AJAX
+  
     
 
     #end-user
@@ -109,6 +117,8 @@ urlpatterns = [
     path("user_delete_ticket",views.user_delete_ticket, name='user_delete_ticket'),
     path("user_add_reply",views.user_add_reply, name='user_add_reply'),
     path("user_delete_reply",views.user_delete_reply, name='user_delete_reply'),
+    
+    path("user_search_tickets",views.user_search_tickets, name='user_search_tickets'),
 
     
     

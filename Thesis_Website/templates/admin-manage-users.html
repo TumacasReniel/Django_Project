@@ -148,7 +148,7 @@
                         {% elif u.status == "USER" %}
                         <div>
                             {% csrf_token %}
-                            <input type="text" name="id" value="{{u.id}}">
+                            <input type="hidden" name="id" value="{{u.id}}">
                             <div class="mb-3">
                                 <label for="first-name" class="form-label ">First Name</label>
                                 <input type="text" name="first_name" class=" form-control " value="{{u.first_name}}">
@@ -246,7 +246,7 @@
 
 
 
-<!-- dmin_update_agent_assigned MODAL-->
+<!-- admin_update_agent_assigned MODAL-->
 <div class="container container-fluid">
     <div class="modal fade" id="update-agent-assigned{{u.id}}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
@@ -266,9 +266,10 @@
                                     {% if agent.user_id == u.id %}
                                         <option value="{{agent.category}}">{{agent.category}}</option>
                                         {% for cat in cat %}
-                                            {% if not cat.id == agent.category_id %} 
+                                            
+                                            {% if cat.department == u.department %}{% if not cat.id == agent.category_id %}
                                                 <option value="{{cat.id}}">{{cat.category_name}}</option>
-                                            {% endif %}
+                                            {% endif %}{% endif %}
                                         {% endfor %}
                                     {% endif %} 
                                 {% endfor %}
@@ -283,7 +284,7 @@
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-danger">Update</button>
+                            <button type="submit" class="btn btn-success">Update</button>
                         </div>
                     </form>
                 </div>

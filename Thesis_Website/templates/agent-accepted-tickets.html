@@ -82,8 +82,7 @@
         <div class="card shadow col-md-12  m-2">
             <div class="row">
                 <div class="col-md-2 small p-3">
-                    <select name="status" class="form-select p-0 m-2 border border-0 ">All Tickets
-                    <option value="">All Tickets</option>
+
                 </select>
                 </div>
                 <div class="col-md-10 small p-3">
@@ -112,8 +111,25 @@
                         <div class="col-sm-3 bg-light p-3">
                             <span><i class="bi bi-building  "></i> {{at.ticket.department}}</span><br>
                             <span><i class="bi bi-sort-up "></i> {{at.ticket.category}}</span><br>
-                            <span><i class="bi bi-sort-down "></i> {{at.ticket.sub_category}}</span><br>
-                            <span><i class="bi bi-flag "></i> {{at.ticket.priority}}</span><br>
+                            {% if ticket.sub_category %} 
+                            <span><i class="bi bi-sort-down "></i> {{ticket.sub_category}}</span><br>
+                            {% endif %}
+                            {% if at.ticket.priority %} 
+
+                                {% if at.ticket.priority == 3 %}
+                                <span><i class="bi bi-flag "></i> High</span><br>
+                                
+
+                                {% elif at.ticket.priority == 2 %}
+                                <span><i class="bi bi-flag "></i> Medium</span><br>
+                                
+
+                                {% elif at.ticket.priority == 1 %}
+                                <span><i class="bi bi-flag "></i> Low</span><br>
+                                
+                                {% endif %}
+                                
+                            {% endif %}<br>
                         </div>
                     </div>
                 </div>
@@ -133,6 +149,7 @@
     <!-- End #main -->
 
     {% include 'logout.html' %} {% include 'admin-footer.html' %}
+   
 
 </body>
 

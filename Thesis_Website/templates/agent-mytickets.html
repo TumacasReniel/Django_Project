@@ -11,8 +11,8 @@
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="% static 'images/favicon.png' %}'" rel="icon">
-    <link href="% static 'images/apple-touch-icon.png' %}" rel="apple-touch-icon">
+    <link href="{% static 'images/favicon.png' %}'" rel="icon">
+    <link href="{% static 'images/apple-touch-icon.png' %}" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -80,55 +80,101 @@
         </div>
 
         <div class="card overflow-auto ">
-            <div class="col-md-12 shadow small">
-
-                <select name=" " class="ticket_status ">
-                            <option value=" ">All Tickets</option>
-                        </select>
-                <span class="small text-muted ">9 total</span>
-                <span class=" ">Sort by</span>
-                <select name=" " class="ticket_status ">
-                            <option value=" ">All Tickets</option>
-                        </select>
-
-                <input type="text " placeholder="Search... " class="p-1 border border-success m-1 search border border-info ">
-                <button class="btn search-btn btn-secondary p-1 ">Search</button>
-                <button class="btn btn-success p-1 m-1 rounded-pill fw-bold float-end" data-bs-toggle="modal" data-bs-target="#create-ticket"><i class="bi bi-plus"></i>Create Ticket</button>
-
+            <div class="col-md-12 shadow small m-3">
+                <div class="row">
+                    <div class="col-4">
+                        <form  method="GET" id="searchForm" data-tickets-url="{% url 'agent_search_tickets' %}">
+                            <select id="id_ts" name="search_ts" class="ticket_status "  >
+                                <option value="">All Tickets</option>
+                                {% for ts in ts %}
+                                <option value="{{ts.id}}">{{ts.ticket_status_name}}</option>
+                                {% endfor %}
+                                <option value="High">High Priority</option>
+                                <option value="Normal">Normal Priority</option>
+                                <option value="Low">Low Priority</option>
+                            </select>
+                            <span class="small text-muted ">9 total</span>
+                            {% comment %}<span class=" ">Sort by</span>
+                            <select id="id_sort" name="" class="ticket_status ">
+                                <option value="">Select</option>
+                                <option value="Newest">Newest</option>
+                                <option value="Oldest">Oldest</option>
+                            </select>{% endcomment %}
+                        </form>
+                    </div>
+                    <div class="col-4">
+                        <form  method="GET" id="searchIDForm" data-tickets-url="{% url 'agent_search_ticket_id' %}">
+                            <input id="id_ticket" type="text" placeholder="Search... " class="p-1 border border-success m-1 search border border-info ">
+                            <button type="button" class="btn search-btn btn-secondary p-1 ">Search</button>
+                        </form>
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-success p-1 m-1 rounded-pill fw-bold float-end" data-bs-toggle="modal" data-bs-target="#create-ticket"><i class="bi bi-plus"></i>Create Ticket</button>
+                    </div>
+                </div>
             </div>
-            <br> {% for ticket in ticket %}{% if ticket.creator_id == user.id %}
-            <a type="button" href="{% url 'view_ticket' ticket.id %}" class="text-dark">
-                <div class="card mb-2 ">
-                    <div class="col-md-12 shadow mb-0 small ">
-                        <div class="row">
-                            <div class="col-md-1 p-3 card-icon  d-flex align-items-center justify-content-end" style="background-color: {{ticket.status.ticket_status_color}};">
-                                <h3 class="rounded-circle bg-light p-2"><i class="bi bi-file-earmark-text "></i></h3>
-                            </div>
-                            <div class="col-md-8 mt-3 mb-3 p-3">
-                                <span><i class="bi bi-card-heading"></i><b> {{ticket.subject}}&nbsp;<i class="text-danger"></b>#{{ticket.id}}</i></span><br>{% for at in at %} {% if at.ticket_id == ticket.id %}
-                                <span><i class="bi bi-headset small text-secondary"> {{at.agent.first_name}}&nbsp;{{at.agent.last_name}}</i> <br> {% endif %} {% endfor %} 
+            <br> 
+            
+            <div id="ticket_body" class="card mb-2">
 
-                                <span><i class="bi bi-card-text small"> {{ticket.status}}</i> </span><br>
-                                <span class="float-end small "> <i class="bi bi-calendar"> {{ticket.created_date}} </i> </span>
-                            </div>
-                            <div class="col-md-3 bg-light p-3 ">
-                                <span><i class="bi bi-building "></i> {{ticket.department}}</span><br>
-                                <span><i class="bi bi-sort-up "></i> {{ticket.category}}</span><br> {% if ticket.sub_category %}
-                                <span><i class="bi bi-sort-down "></i> {{ticket.sub_category}}</span><br> {% endif %}
-                                <span><i class="bi bi-flag "></i> {{ticket.priority}}</span><br>
+                {% for ticket in ticket %}
+
+                <a  type="button" href="{% url 'view_ticket' ticket.id %}" class="text-dark" id="ticket_body">
+                    <div class="card mb-2" >
+                        <div class="col-md-12 shadow mb-0 small ">
+                            <div class="row">
+                                <div class="col-md-1 p-3 card-icon  d-flex align-items-center justify-content-end" style="background-color: {{ticket.status.ticket_status_color}};">
+                                    <h3 class="rounded-circle bg-light p-2"><i class="bi bi-file-earmark-text "></i></h3>
+                                </div>
+                                <div class="col-md-8 mt-3 mb-3 p-3">
+                                    <span><i class="bi bi-card-heading"></i><b> {{ticket.subject}}&nbsp;<i class="text-danger"></b>#{{ticket.id}}</i></span><br>
+
+                                    {% for at in at %} 
+                                        {% if at.ticket_id == ticket.id %}
+                                        <span><i class="bi bi-headset small text-secondary"> {{at.agent.first_name}}&nbsp;{{at.agent.last_name}}</i> <br> 
+                                        {% endif %} 
+                                    {% endfor %} 
+
+                                    <span><i class="bi bi-card-text small"> {{ticket.status}}</i> </span><br>
+                                    <span class="float-end small "> <i class="bi bi-calendar"> {{ticket.created_date}} </i> </span>
+                                </div>
+                                <div class="col-md-3 bg-light p-3 ">
+                                    <span><i class="bi bi-building "></i> {{ticket.department}}</span><br>
+                                    <span><i class="bi bi-sort-up "></i> {{ticket.category}}</span><br> 
+                                    {% if ticket.sub_category %}
+                                    <span><i class="bi bi-sort-down "></i> {{ticket.sub_category}}</span><br> 
+                                    {% endif %}
+                                    {% if ticket.priority %} 
+
+                                        {% if ticket.priority == 3 %}
+                                        <span><i class="bi bi-flag "></i> High</span><br>
+                                        
+
+                                        {% elif ticket.priority == 2 %}
+                                        <span><i class="bi bi-flag "></i> Normal</span><br>
+                                        
+
+                                        {% elif ticket.priority == 1 %}
+                                        <span><i class="bi bi-flag "></i> Low</span><br>
+
+                                        {% endif %}
+                                    {% endif %}
+                                
+                                </div>
                             </div>
                         </div>
                     </div>
+                </a>
+                <div class="col-md-12 bg-white shadow mb-3 p-1 ">
+                    <div class=" ">
+                        {% if ticket.status.ticket_status_name == "Pending" %}
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#delete-myticket{{ticket.id}}" class="btn p-0 "><i class="bi bi-trash text-danger small m-2 "></i><span class="small ">Delete</span></button>
+                        {% endif %}
+                    </div>
                 </div>
-            </a>
-            <div class="col-md-12 bg-white shadow mb-3 p-1 ">
-                <div class=" ">
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#delete-myticket{{ticket.id}}" class="btn p-0 "><i class="bi bi-trash text-danger small m-2 "></i><span class="small ">Delete</span></button>
-                </div>
+                {% include 'agent-delete-ticket-modal.html' %}  {% endfor %}
             </div>
-            {% include 'agent-delete-ticket-modal.html' %} {% endif %} {% endfor %}
         </div>
-
     </main>
     <!-- End #main -->
 
@@ -210,7 +256,7 @@
     {% include 'logout.html' %} {% include 'admin-footer.html' %}
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js "></script>
-    <script>
+     <script>
         $("#id_dep").change(function() {
             const url = $("#ticketForm").attr("data-categories-url"); // get the url of the `load_cities` view
             const departmentId = $(this).val(); // get the selected department ID from the HTML input
@@ -251,21 +297,64 @@
                 },
                 success: function(data) { // `data` is the return of the `load_sub_categories` view function
                     $("#id_sub_c").html(data); // replace the contents of the sub category input with the data that came from the server
-
+                    /*
 
                     let html_data = '<option value=" ">---------</option>';
                     data.forEach(function(subc) {
                         html_data += `<option value="${subc.id} ">${subc.sub_category_name}</option>`
                     });
                     console.log(html_data);
-                    $("#id_category").html(html_data);
-
+                    $("#id_category").html(html_data); 
+                    */
 
                 }
             });
 
         });
     </script>
+
+    <script>
+        $("#id_ts").change(function() {
+            const url = $("#searchForm").attr("data-tickets-url"); // get the url of the `agent_mytickets` view
+            const ts_id = $(this).val(); // get the selected ID from the HTML input
+
+            $.ajax({ // initialize an AJAX request
+                url: url, // set the url of the request
+                data: {
+                    'ticket_status_id': ts_id // add the department id to the GET parameters
+                },
+                success: function(data) { // `data` is the return of the `search_ts` view function
+                    $("#ticket_body").html(data); // replace the contents of the category input with the data that came from the server 
+                    
+
+                }
+                
+            });
+
+        });
+    </script>
+
+    <script>
+        $("#id_ticket").change(function() {
+            const url = $("#searchIDForm").attr("data-tickets-url"); // get the url of the `agent_mytickets` view
+            const ts_id = $(this).val(); // get the selected ID from the HTML input
+
+            $.ajax({ // initialize an AJAX request
+                url: url, // set the url of the request
+                data: {
+                    'ticket_id': ts_id // add the department id to the GET parameters
+                },
+                success: function(data) { // `data` is the return of the `search_ts` view function
+                    $("#ticket_body").html(data); // replace the contents of the category input with the data that came from the server 
+                    
+
+                }
+                
+            });
+
+        });
+    </script>
+    
     
 </body>
 

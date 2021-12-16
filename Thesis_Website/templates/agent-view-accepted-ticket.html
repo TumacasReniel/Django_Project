@@ -95,22 +95,49 @@
                         <img src="{% static 'images/avatar.svg' %}" alt="Profile" class="rounded-circle" width="45" height="45"> {% endif %}
 
                         <span class="small">{{ticket.creator.first_name}}&nbsp;{{ticket.creator.last_name}}</span>
-                        <span class="p-3"><i class="bi bi-card-text small"> {{ticket.status}}</i> </span>{% for at in at %} {% if at.ticket_id == ticket.id %}
-                        <span><i class="bi bi-headset small text-secondary"> {{at.agent.first_name}}&nbsp;{{at.agent.last_name}}</i></span> <span><i class="bi bi-headset small text-secondary"> {{at.invited_agent.first_name}}&nbsp;{{at.invited_agent.last_name}}</i> <br></span>                        {% endif %} {% endfor %} {% if ticket.attach_file %}
-                        <span class="p-3"><i class="bi bi-file-earmark-image small"> <a href="{{ticket.attach_file.url}}">view attach file</a></i> </span>{% endif %}
+                        <span class="p-3"><i class="bi bi-card-text small"> {{ticket.status}}</i> </span>
+                        
+                        {% for at in at %} 
+                            {% if at.ticket_id == ticket.id %}
+                                <span>
+                                    <i class="bi bi-headset small text-secondary"> {{at.agent.first_name}}&nbsp;{{at.agent.last_name}}
+                                    </i>
+                                </span> 
+                                <span>
+                                    <i class="bi bi-headset small text-secondary"> {{at.invited_agent.first_name}}&nbsp;{{at.invited_agent.last_name}}
+                                    </i> <br>
+                                </span>                       
+                            {% endif %} 
+                        {% endfor %} 
+                        
+                        {% if ticket.attach_file %}
+                        <span class="p-3"><i class="bi bi-file-earmark-image small"> <a href="{{ticket.attach_file.url}}">view attach file</a></i> </span>
+                        {% endif %}
                         <span class="small float-end"> <i class="bi bi-calendar"> {{ticket.created_date}} </i> 
                     </div>
 
-
-        
-
-
-
                         <div class="col-sm-4 bg-light p-3 "><br>
-                            <span><i class="bi bi-building "></i> {{ticket.department}}</span><br>
+                        <span><i class="bi bi-building "></i> {{ticket.department}}</span><br>
                         <span><i class="bi bi-sort-up "></i> {{ticket.category}}</span><br>
+                        {% if ticket.sub_category %} 
                         <span><i class="bi bi-sort-down "></i> {{ticket.sub_category}}</span><br>
-                        <span><i class="bi bi-flag "></i> {{ticket.priority}}</span><br>
+                        {% endif %}
+                            {% if ticket.priority %} 
+
+                                {% if ticket.priority == 3 %}
+                                <span><i class="bi bi-flag "></i> High</span><br>
+                                
+
+                                {% elif ticket.priority == 2 %}
+                                <span><i class="bi bi-flag "></i>Normal</span><br>
+                                
+
+                                {% elif ticket.priority == 1 %}
+                                <span><i class="bi bi-flag "></i> Low</span><br>
+
+                                {% endif %}
+                            {% endif %}
+                        <br>
                     </div>
                 </div>
             </div>
@@ -160,11 +187,14 @@
                     <div class="col-sm-12  ">
                         <input type="file" class="small mt-1 mb-2" name="reply_attach_file">
                         <center>
-                            <button type="submit" class="btn btn-secondary p-1"><i>
+                            <button type="submit" class="btn btn-secondary p-1 mb-2"><i>
                                     <svg xmlns="http://www.w3.org/2000/svg " width="16 " height="16 " fill="currentColor " class="bi bi-send-fill " viewBox="0 0 16 16 ">
                                     <path fill-rule="evenodd " d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89.471-1.178-1.178.471L5.93
                     9.363l.338.215a.5.5 0 0 1 .154.154l.215.338 7.494-7.494Z "/>
-                                    </svg></i> Send
+                                    </svg></i> <i class="small">Send</i>
+                            </button>
+                             <button type="button" data-bs-toggle="modal" 
+                             data-bs-target="#agent_mark_as_resolved_ticket{{ticket.id}}" class="btn p-1 btn-danger mb-2 float-end m-1" ><i class="bi bi-bookmark-star small m-2 "></i><span class="small "><i class="small">Mark as Resolved</i></span>
                             </button>
                         </center>
                     </div>
@@ -174,13 +204,20 @@
 
         <div class="col-md-12 bg-white shadow mb-3 p-1 ">
             <div class=" ">
-                <button type="button" data-bs-toggle="collapse" data-bs-target="#reply_box" class="btn p-0 " name="reply_btn"><i class="bi bi-reply small m-2 "></i><span class="small ">Reply</span></button>
-                <span></span>{% for at in at %}{% if at.ticket.id == ticket.id %}{% if not at.invited_agent %}
-                <button type="button" data-bs-toggle="modal" data-bs-target="#agent-invite-agent" class="btn p-0 "><i class="bi bi-tag text-danger small m-2 "></i><span class="small ">Invite Agent</span>
-                </button> {% endif %}{% endif %}{% endfor %}
+                <button type="button" data-bs-toggle="collapse" data-bs-target="#reply_box" class="btn p-0 " name="reply_btn"><i class="bi bi-reply small m-2 "></i><span class="small ">Reply</span>
+                </button>
+               
+                {% for at in at %}
+                    {% if at.ticket.id == ticket.id %}
+                        {% if not at.invited_agent %}
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#agent-invite-agent" class="btn p-0 "><i class="bi bi-tag text-danger small m-2 "></i><span class="small ">Invite Agent</span>
+                            </button> 
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
-        {% include 'agent-delete-ticket-modal.html' %} {% include 'agent-invite-agent-modal.html' %}
+         {% include 'agent-mark-as-resolved-ticket-modal.html' %}{% include 'agent-delete-ticket-modal.html' %} {% include 'agent-invite-agent-modal.html' %}
 
 
     </main>

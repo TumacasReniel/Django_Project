@@ -123,7 +123,6 @@
                                 <div class=" dropdown ">
                                     <button class="btn btn-white fw-bold " id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">&mldr;</button>
                                     <div class="dropdown-menu ">
-                                        <a class="dropdown-item " type="button" data-bs-toggle="modal" data-bs-target="#update-ticket-status{{ts.id}}"><i class="bi bi-pencil-square text-success "></i>Edit</a>
                                         <a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#delete-ticket-status{{ts.id}}"><i class="bi bi-trash text-danger "></i>Delete</a>
                                     </div>
                                 </div>
@@ -151,7 +150,7 @@
                         <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
-                    <form action="add_ticket_status" method="POST">
+                    <form action="{% url 'add_ticket_status' %}" method="POST">
                         {% csrf_token %}
                         <div class="modal-body ">
                             <!-- Inputs -->
@@ -163,7 +162,7 @@
                                 <label for="ticket_status_color" class="form-label">Ticket Status Color</label><br>
 
                                 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                    <input type="radio" class="btn-check" name="ticket_status_color" id="btnradio1" autocomplete="off" value="black" checked>
+                                    <input type="radio" class="btn-check" name="ticket_status_color" id="btnradio1" autocomplete="off" value="black" checked >
                                     <label class="btn btn-dark p-3 m-1 rounded-circle" for="btnradio1"></label>
 
                                     <input type="radio" class="btn-check" name="ticket_status_color" id="btnradio2" autocomplete="off" value="red">
@@ -175,7 +174,7 @@
                                     <input type="radio" class="btn-check" name="ticket_status_color" id="btnradio4" autocomplete="off" value="green">
                                     <label class="btn btn-green p-3 m-1 rounded-circle" for="btnradio4"></label>
 
-                                    <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off" value="yellow">
+                                    <input type="radio" class="btn-check" name="ticket_status_color" id="btnradio5" autocomplete="off" value="yellow">
                                     <label class="btn btn-yellow p-3 m-1 rounded-circle" for="btnradio5"> </label>
 
                                     <input type="radio" class="btn-check" name="ticket_status_color" id="btnradio6" autocomplete="off" value="orange">

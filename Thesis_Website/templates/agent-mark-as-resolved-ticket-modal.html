@@ -1,0 +1,26 @@
+<!--agent mark ticket as resolved MODAL-->
+<div class="container container-fluid">
+    <div class="modal fade" id="agent_mark_as_resolved_ticket{{ticket.id}}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <center>
+                    <form action="{% url 'agent_mark_as_resolved_ticket' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="agent" value="{{user.id}}">
+                        <input type="hidden" name="id" value="{{ticket.id}}">
+                        <div class="modal-body">
+                            Are you sure you want to <span class="text-danger">"Mark as Resolved"</span> this ticket <span class="text-danger">#{{ticket.id}}</span>?
+                            <br><br>
+                           
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                            <button type="submit" class="btn btn-success">Yes</button>
+                        </div>
+                    </form>
+                </center>
+            </div>
+        </div>
+    </div>
+</div>
+<!--agent mark ticket as resolved MODAL-->

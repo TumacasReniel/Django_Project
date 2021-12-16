@@ -1,0 +1,85 @@
+ {% load static %}
+ {% for ticket in ticket %}
+    {% if not request.user.is_superuser %}{% if request.user.department == ticket.department %}{% if request.user.department == ticket.department %}
+            <div class="card mb-2 ">
+                <a type="button" href="{% url 'view_ticket' ticket.id %}" class="text-dark"></a>
+                <div class="col-md-12 shadow mb-0 small  ">
+                    <div class="row">
+                        <div class="col-md-1 d-flex justify-content-center align-items-center" style="background-color: {{ticket.status.ticket_status_color}};">
+                            <div class=""> {% if ticket.creator.profile_pic %}
+                                <img src="{{ ticket.creator.profile_pic.url }}" alt="Profile" class="rounded-circle" width="45" height="45"> {% else %}
+                                <img src="{% static 'images/avatar.svg' %}" alt="Profile" class="rounded-circle" width="45" height="45"> {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-8 mt-3 mb-3 p-3">
+                            <span class="small"> <i class="bi bi-person"> </i> {{ticket.creator.first_name}}&nbsp;{{ticket.creator.last_name}} </span><br>
+                            <span><i class="bi bi-card-heading"></i><b> {{ticket.subject}}&nbsp;<i class="text-danger"></b>#{{ticket.id}}</i></span><br>{% for at in at %} {% if at.ticket_id == ticket.id %}
+                            <span><i class="bi bi-headset small text-secondary"> {{at.agent.first_name}}&nbsp;{{at.agent.last_name}}</i> <br> {% endif %} {% endfor %} 
+
+                            <span><i class="bi bi-card-text small"> {{ticket.status}}</i> </span>
+                            <span class="float-end "> <i class="bi bi-calendar"> {{ticket.created_date}} </i> </span>
+                        </div>
+
+                        <div class="col-md-3 bg-light p-3 ">
+                            <br>
+                            <span><i class="bi bi-building "></i> {{ticket.department}}</span><br>
+                            <span><i class="bi bi-sort-up "></i> {{ticket.category}}</span><br>
+                            {% if ticket.sub_category %}
+                            <span><i class="bi bi-sort-down "></i> {{ticket.sub_category}}</span><br> 
+                            {% endif %}
+                            {% if ticket.priority %} 
+
+                                {% if ticket.priority == 3 %}
+                                <span><i class="bi bi-flag "></i> High</span><br>
+                                
+
+                                {% elif ticket.priority == 2 %}
+                                <span><i class="bi bi-flag "></i> Normall</span><br>
+                                
+
+                                {% elif ticket.priority == 1 %}
+                                <span><i class="bi bi-flag "></i> Low</span><br>
+
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                </a>
+            </div>
+
+            {% endif %}{% endif %}{% elif request.user.is_superuser %}
+            
+            <div class="card mb-2 ">
+                <a type="button" href="{% url 'view_ticket' ticket.id %}" class="text-dark"></a>
+                <div class="col-md-12 shadow mb-0 small  ">
+                    <div class="row">
+                        <div class="col-md-1 d-flex justify-content-center align-items-center" style="background-color: {{ticket.status.ticket_status_color}};">
+                            <div class=""> {% if ticket.creator.profile_pic %}
+                                <img src="{{ ticket.creator.profile_pic.url }}" alt="Profile" class="rounded-circle" width="45" height="45"> {% else %}
+                                <img src="{% static 'images/avatar.svg' %}" alt="Profile" class="rounded-circle" width="45" height="45"> {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-8 mt-3 mb-3 p-3">
+                            <span class="small"> <i class="bi bi-person"> </i> {{ticket.creator.first_name}}&nbsp;{{ticket.creator.last_name}} </span><br>
+                            <span><i class="bi bi-card-heading"></i><b> {{ticket.subject}}&nbsp;<i class="text-danger"></b>#{{ticket.id}}</i></span><br>{% for at in at %} {% if at.ticket_id == ticket.id %}
+                            <span><i class="bi bi-headset small text-secondary"> {{at.agent.first_name}}&nbsp;{{at.agent.last_name}}</i> <br> {% endif %} {% endfor %} 
+
+                            <span><i class="bi bi-card-text small"> {{ticket.status}}</i> </span>
+                            <span class="float-end "> <i class="bi bi-calendar"> {{ticket.created_date}} </i> </span>
+                        </div>
+
+                        <div class="col-md-3 bg-light p-3 ">
+                            <br>
+                            <span><i class="bi bi-building "></i> {{ticket.department}}</span><br>
+                            <span><i class="bi bi-sort-up "></i> {{ticket.category}}</span><br>
+                            <span><i class="bi bi-sort-down "></i> {{ticket.sub_category}}</span><br>
+                            <span><i class="bi bi-flag "></i> {{ticket.priority}}</span><br>
+                        </div>
+                    </div>
+                </div>
+                </a>
+            </div>
+
+    {% endif %}
+{% endfor %}

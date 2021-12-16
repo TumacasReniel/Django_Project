@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts.apps.AccountsConfig' ,
     'notifications.apps.NotificationsConfig',
-    'monkeylearn'
 
 ]
 
@@ -82,7 +81,7 @@ WSGI_APPLICATION = 'Thesis_Website.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'db7',
+        'NAME': 'db1',
         'USER': 'postgres',
         'PASSWORD' : '1234',
         'HOST': 'localhost'
@@ -155,4 +154,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'renieltumacas2@gmail.com'
 EMAIL_HOST_PASSWORD = 'renieltumacas_125'
 
+USE_TZ = True
 

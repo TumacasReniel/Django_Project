@@ -119,6 +119,7 @@
                                     <div class="col-md-12">
                                         <label for="email" class="form-label">Department</label>
                                         <input type="text" class="form-control" name="department" value="{{user.department.department_name}}" readonly>
+                                        
                                     </div>
                                     {% for agent in agent %}{% if user.id == agent.user_id %}
                                     <div class="col-md-6 mt-3">
@@ -134,14 +135,10 @@
                                 </form>
 
                                 <div class="m-3">
-                                    <button data-bs-toggle="modal" data-bs-target="#create-ticket" class="btn btn-success text-white fw-bold rounded-pill border border-success mb-2 ">
-                                            <i class=" fa fa-plus "></i>
-                                            Update       
-                                            </button>
-                                    <button data-bs-toggle="modal" data-bs-target="#create-ticket" class="btn btn-secondary text-white fw-bold rounded-pill border border-success mb-2 ">
-                                            <i class=" fa fa-plus "></i>
-                                            Change Password         
-                                             </button>
+                                    <button data-bs-toggle="modal" data-bs-target="#update-profile-info{{user.id}}" class="btn btn-success text-white fw-bold rounded-pill border border-success mb-2 ">
+                                        <i class=" fa fa-plus "></i>
+                                        Update       
+                                    </button>
 
                                 </div>
                             </div>

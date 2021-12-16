@@ -65,6 +65,7 @@ class User(AbstractBaseUser):
     is_superuser =models.BooleanField(default=False)
     department = models.ForeignKey('ST_System.departments',on_delete=CASCADE,blank=True, null=True)
     profile_pic = models.ImageField(blank=True,null=True,upload_to="images/")
+    forget_password_token = models.CharField(max_length=255, blank=True, null=True )
 
 
     USERNAME_FIELD ="username"
